@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>末日華語：復古科幻 RPG 競賽</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --dark-bg: #0a0a0a;
+            --crt-overlay: rgba(18, 16, 16, 0.1);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* CRT 掃描線效果 */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        #game-container {
+            width: 90%;
+            max-width: 800px;
+            height: 600px;
+            border: 4px solid var(--neon-green);
+            position: relative;
+            background: #111;
+            box-shadow: 0 0 20px var(--neon-green);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .screen { display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .screen.active { display: flex; }
+
+        h1 { font-family: 'Press Start 2P', cursive; font-size: 24px; text-shadow: 2px 2px var(--neon-pink); }
+        
+        .btn {
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
+
+        .char-box { display: flex; gap: 20px; margin-top: 20px; }
+        .char-card {
+            border: 2px solid var(--neon-blue);
+            padding: 10px;
+            cursor: pointer;
+            width: 120px;
+        }
+        .char-card.selected { background: var(--neon-blue); color: black; }
+
+        /* 戰鬥介面 */
+        #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .stat-bar { width: 45%; border: 1px solid var(--neon-pink); padding: 5px; font-size: 12px; }
+        
+        #timer-container { width: 100%; height: 10px; border: 1px solid white; margin: 10px 0; }
+        #timer-bar { width: 100%; height: 100%; background: var(--neon-green); transition: width 0.1s linear; }
+
+        #question-text { font-size: 20px; margin: 20px 0; min-height: 60px; color: white; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+
+        #feedback { font-weight: bold; margin-top: 10px; height: 20px; }
+
+        /* 動畫 */
+        @keyframes flicker {
+            0% { opacity: 0.9; } 100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="start-screen" class="screen active">
+        <h1>數位華語 PRG 戰線</h1>
+        <p>Cyber Mandarin RPG v1.0</p>
+        <button class="btn" onclick="goToScreen('char-select')">ENTER SYSTEM</button>
+    </div>
+
+    <div id="char-select" class="screen">
+        <h3>選擇你的數位身份</h3>
+        <div class="char-box">
+            <div class="char-card" onclick="selectChar('學生', 10, 50)" id="char-1">學生<br><small>智力+10</small></div>
+            <div class="char-card" onclick="selectChar('助教', 30, 30)" id="char-2">助教<br><small>技術+30</small></div>
+            <div class="char-card" onclick="selectChar('老師', 50, 10)" id="char-3">老師<br><small>經驗+50</small></div>
+        </div>
+        <h3 style="margin-top:30px">選擇挑戰難度</h3>
+        <div>
+            <button class="btn" onclick="startGame('easy')">簡單 (字謎)</button>
+            <button class="btn" onclick="startGame('normal')">普通 (文化/成語)</button>
+            <button class="btn" onclick="startGame('hard')">困難 (綜合混戰)</button>
+        </div>
+    </div>
+
+    <div id="battle-screen" class="screen">
+        <div id="battle-stats">
+            <div class="stat-bar" id="player-stat">PLAYER: 0</div>
+            <div class="stat-bar" id="ai-stat" style="border-color: var(--neon-pink);">AI (BOT): 0</div>
+        </div>
+        <div id="level-indicator">Level: 1/6</div>
+        <div id="timer-container"><div id="timer-bar"></div></div>
+        <div id="question-text">系統載入中...</div>
+        <div id="audio-btn-container" style="display:none">
+            <button class="btn" onclick="playQuestionAudio()">🔊 播放語音</button>
+        </div>
+        <div class="options-grid" id="options"></div>
+        <div id="feedback"></div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <h1 id="final-status">MISSION COMPLETE</h1>
+        <div id="final-scores" style="font-size: 18px; margin: 20px 0;"></div>
+        <button class="btn" onclick="location.reload()">重新啟動系統</button>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// 題庫資料 (含自動生成語音題)
+// ============================================================
+const QB = {
+    riddle: [
+        {q:"一人一張口。",a:"合",w:["含","答","口"]},
+        {q:"兩人在內。",a:"肉",w:["內","囚","網"]},
+        {q:"哪個漢字要寫最久？",a:"朋",w:["友","好","鵬"]},
+        {q:"一隻狗有四張口。",a:"器",w:["哮","嚎","囂"]},
+        {q:"太陽的兒子。",a:"星",w:["旦","晨","昇"]},
+        {q:"七十二小時。",a:"晶",w:["品","昌","明"]},
+        {q:"不上不下。",a:"卡",w:["上","下","中"]},
+        {q:"山上還有山。",a:"出",w:["山","峰","嶺"]},
+    ],
+    culture: [
+        {q:"下列何者是宋代以後主要的私學機構？",a:"書院",w:["精舍","國子監","太學"]},
+        {q:"職業戲班俗稱？",a:"梨園",w:["崑園","京園","旗園"]},
+        {q:"「穿針乞巧」與哪個節日有關？",a:"七夕節",w:["上元節","元宵節","端午節"]},
+        {q:"台灣「紅毛城」中「紅毛」指？",a:"荷蘭人",w:["西班牙人","英國人","葡萄牙人"]},
+    ],
+    idiom: [
+        {q:"「胸有成竹」現用來比喻什麼？",a:"很有把握",w:["為人正直","孤芳自賞","內心空虛"]},
+        {q:"「破釜沉舟」與哪位歷史人物有關？",a:"項羽",w:["劉邦","韓信","諸葛亮"]},
+        {q:"「望梅止渴」與哪位歷史人物有關？",a:"曹操",w:["劉備","袁紹","董卓"]},
+        {q:"「邯鄲學步」比喻什麼？",a:"模仿別人反丟了本領",w:["學習要刻苦","走路姿勢重要","活到老學到老"]},
+    ],
+    audio: [
+        {q:"請聽音選出『水彩筆』正確的注音變調：", a:"ㄕㄨㄟˇ ㄘㄞˊ ㄅㄧˇ", w:["ㄕㄨㄟˇ ㄘㄞˇ ㄅㄧˇ", "ㄕㄨㄟˊ ㄘㄞˊ ㄅㄧˇ", "ㄕㄨㄟˊ ㄘㄞˇ ㄅㄧˇ"], text:"水彩筆"},
+        {q:"請聽音選出『小米酒』正確的注音變調：", a:"ㄒㄧㄠˇ ㄇㄧˊ ㄐㄧㄡˇ", w:["ㄒㄧㄠˇ ㄇㄧˇ ㄐㄧㄡˇ", "ㄒㄧㄠˊ ㄇㄧˊ ㄐㄧㄡˇ", "ㄒㄧㄠˊ ㄇㄧˇ ㄐㄧㄡˊ"], text:"小米酒"},
+        {q:"請聽音選出『仍然』正確的讀音：", a:"ㄖㄥˊ ㄖㄢˊ", w:["ㄌㄥˊ ㄌㄢˊ", "ㄖㄣˊ ㄖㄢˊ", "ㄌㄥˊ ㄖㄢˊ"], text:"仍然"},
+        {q:"請聽音選出『相稱』中「稱」的讀音：", a:"ㄔㄣˋ", w:["ㄔㄥ", "ㄔㄥˋ", "ㄔㄣ"], text:"相稱"},
+        {q:"請聽音選出『渲染』中「渲」的讀音：", a:"ㄒㄩㄢˋ", w:["ㄒㄩㄢ", "ㄒㄩㄢˇ", "ㄒㄩㄢˊ"], text:"渲染"},
+    ]
+};
+
+// ============================================================
+// 遊戲邏輯變數
+// ============================================================
+let gameState = {
+    playerScore: 0,
+    aiScore: 0,
+    currentLevel: 0,
+    maxLevels: 6,
+    difficulty: '',
+    selectedChar: '',
+    currentQuestions: [],
+    timer: null,
+    timeLeft: 10,
+    canAnswer: false
+};
+
+function goToScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+function selectChar(name, kp, sp) {
+    gameState.selectedChar = name;
+    document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
+    if(name === '學生') document.getElementById('char-1').classList.add('selected');
+    if(name === '助教') document.getElementById('char-2').classList.add('selected');
+    if(name === '老師') document.getElementById('char-3').classList.add('selected');
+}
+
+function startGame(diff) {
+    if(!gameState.selectedChar) { alert("請先選擇一個角色！"); return; }
+    gameState.difficulty = diff;
+    gameState.playerScore = 0;
+    gameState.aiScore = 0;
+    gameState.currentLevel = 0;
+    
+    // 根據難度準備題庫
+    prepareQuestions(diff);
+    goToScreen('battle-screen');
+    nextQuestion();
+}
+
+function prepareQuestions(diff) {
+    let pool = [];
+    if(diff === 'easy') pool = [...QB.riddle];
+    if(diff === 'normal') pool = [...QB.culture, ...QB.idiom];
+    if(diff === 'hard') pool = [...QB.riddle, ...QB.culture, ...QB.idiom, ...QB.audio];
+    
+    // 隨機選出 6 題
+    gameState.currentQuestions = pool.sort(() => 0.5 - Math.random()).slice(0, 6);
+}
+
+function nextQuestion() {
+    if(gameState.currentLevel >= gameState.maxLevels) {
+        endGame();
+        return;
+    }
+
+    gameState.canAnswer = true;
+    gameState.currentLevel++;
+    document.getElementById('level-indicator').innerText = `Level: ${gameState.currentLevel} / ${gameState.maxLevels}`;
+    document.getElementById('feedback').innerText = "";
+    
+    let qData = gameState.currentQuestions[gameState.currentLevel-1];
+    document.getElementById('question-text').innerText = qData.q;
+    
+    // 處理語音題按鈕
+    if(qData.text) {
+        document.getElementById('audio-btn-container').style.display = 'block';
+        playQuestionAudio(); 
+    } else {
+        document.getElementById('audio-btn-container').style.display = 'none';
+    }
+
+    // 渲染選項
+    let options = [qData.a, ...qData.w].sort(() => 0.5 - Math.random());
+    let optionsHtml = '';
+    options.forEach(opt => {
+        optionsHtml += `<button class="btn" onclick="checkAnswer('${opt}')">${opt}</button>`;
+    });
+    document.getElementById('options').innerHTML = optionsHtml;
+
+    startTimer();
+}
+
+function startTimer() {
+    clearInterval(gameState.timer);
+    gameState.timeLeft = 15; // 15秒一題
+    const bar = document.getElementById('timer-bar');
+    
+    gameState.timer = setInterval(() => {
+        gameState.timeLeft -= 0.1;
+        bar.style.width = (gameState.timeLeft / 15) * 100 + "%";
+        
+        if(gameState.timeLeft <= 0) {
+            clearInterval(gameState.timer);
+            checkAnswer(null); // 時間到
+        }
+    }, 100);
+}
+
+function playQuestionAudio() {
+    let qData = gameState.currentQuestions[gameState.currentLevel-1];
+    if(!qData.text) return;
+    
+    let utterance = new SpeechSynthesisUtterance(qData.text);
+    utterance.lang = 'zh-TW';
+    utterance.rate = 0.8;
+    window.speechSynthesis.speak(utterance);
+}
+
+function checkAnswer(playerPick) {
+    if(!gameState.canAnswer) return;
+    gameState.canAnswer = false;
+    clearInterval(gameState.timer);
+
+    let qData = gameState.currentQuestions[gameState.currentLevel-1];
+    let correct = (playerPick === qData.a);
+    
+    // 計算玩家得分
+    let pGain = 0;
+    if(correct) {
+        pGain = Math.round((gameState.timeLeft / 15) * 1000);
+        document.getElementById('feedback').innerText = "SYSTEM: CORRECT (+"+pGain+")";
+        document.getElementById('feedback').style.color = varName('--neon-green');
+    } else {
+        document.getElementById('feedback').innerText = "SYSTEM: ERROR (0)";
+        document.getElementById('feedback').style.color = "red";
+    }
+    gameState.playerScore += pGain;
+
+    // AI 行動模擬
+    simulateAI(qData.a);
+}
+
+function simulateAI(correctAnswer) {
+    // AI 答題時間隨機 (3-10秒)
+    let aiTime = Math.random() * 7 + 3;
+    let aiCorrect = Math.random() > 0.2; // 80% 正確率
+    
+    let aiGain = 0;
+    if(aiCorrect) {
+        aiGain = Math.round(((15 - aiTime) / 15) * 1000);
+    }
+    
+    gameState.aiScore += aiGain;
+    updateUI();
+
+    // 延遲進入下一題
+    setTimeout(nextQuestion, 1500);
+}
+
+function updateUI() {
+    document.getElementById('player-stat').innerText = `PLAYER (${gameState.selectedChar}): ${gameState.playerScore}`;
+    document.getElementById('ai-stat').innerText = `AI (BOT): ${gameState.aiScore}`;
+}
+
+function endGame() {
+    goToScreen('result-screen');
+    let win = gameState.playerScore >= gameState.aiScore;
+    document.getElementById('final-status').innerText = win ? "PLAYER VICTORIOUS" : "AI DOMINATION";
+    document.getElementById('final-status').style.color = win ? varName('--neon-green') : "red";
+    
+    document.getElementById('final-scores').innerHTML = `
+        玩家得分: ${gameState.playerScore}<br>
+        AI 總分: ${gameState.aiScore}<br><br>
+        ${win ? "你成功守護了數位華語防線！" : "再接再厲，別讓 AI 超越你了！"}
+    `;
+}
+
+function varName(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name);
+}
+
+// 初始化語音 (部分瀏覽器需要)
+window.speechSynthesis.getVoices();
+</script>
+
+</body>
+</html>
