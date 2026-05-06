@@ -133,7 +133,7 @@
 
 <div id="game-container">
     <div id="start-screen" class="screen active">
-        <h1 style="font-size: 50px;">數位華語<br>像素勇者遠征</h1>
+        <h1 style="font-size: 70px;">數位華語<br>像素勇者遠征</h1>
         <button class="btn" style="font-size: 30px; margin-top: 30px;" onclick="goToScreen('char-select')">開始冒險</button>
     </div>
 
@@ -145,12 +145,11 @@
             <div class="char-card" id="c3" onclick="selectChar('老師')">老師<br><small>經驗+50</small></div>
         </div>
         <div style="display:flex; flex-direction: column; align-items: center;">
-            <div style="display:flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <div style="display:flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
                 <button class="btn" onclick="setDiff('easy')">簡單模式</button>
                 <button class="btn" onclick="setDiff('normal')">普通模式</button>
                 <button class="btn" onclick="setDiff('hard')">困難模式</button>
             </div>
-            <p class="diff-desc">簡單：字謎＋漢字結構　｜　普通：拼音＋成語　｜　困難：文化知識</p>
         </div>
     </div>
 
@@ -619,11 +618,14 @@ function showResult() {
     msg.style.textShadow = "0 0 15px var(--flower-red)";
   } else {
     flower.style.display = 'none';
-    motherMsg.style.display = 'none';
+    motherMsg.style.display = 'block';
+    motherMsg.innerText = isWin ? "遠征成功！再接再厲，全答對解鎖康乃馨！" : "任務失敗⋯⋯重整旗鼓，再戰一場！";
+    motherMsg.style.color = isWin ? "var(--neon-green)" : "#ff4444";
+    motherMsg.style.textShadow = isWin ? "0 0 20px var(--neon-green)" : "0 0 20px #ff0000";
     msg.innerText = isWin ? "遠征成功" : "任務失敗";
     msg.style.color = isWin ? "var(--neon-green)" : "red";
     scoreCorner.innerText += isWin ? "\n全答對可獲得粉色康乃馨唷！" : "\n守護失敗，請重新啟動系統！";
-  }
+  }   
 }
 </script>
 </body>
