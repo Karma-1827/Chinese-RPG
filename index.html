@@ -82,7 +82,7 @@
 
         .pixel-flower {
             width: 4px; height: 4px; background: transparent;
-            margin-bottom: 100px;
+            margin-bottom: 130px;
             box-shadow: 
                 -4px -12px var(--flower-red), 0 -12px var(--flower-red), 4px -12px var(--flower-red),
                 -8px -8px var(--flower-pink), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-pink),
@@ -92,28 +92,41 @@
                 0 8px #1b4332, 0 12px #1b4332, 0 16px #1b4332, 0 20px #1b4332,
                 -4px 12px #2d6a4f, -8px 12px #1b4332,
                 4px 16px #2d6a4f, 8px 16px #1b4332;
-            transform: scale(6);
+            transform: scale(9);
             animation: flower-glow 2s infinite ease-in-out;
             display: none;
         }
 
         @keyframes flower-glow {
-            0%, 100% { transform: scale(6) translateY(0); filter: drop-shadow(0 0 10px var(--flower-pink)); }
-            50% { transform: scale(6.2) translateY(-15px); filter: drop-shadow(0 0 20px var(--flower-red)); }
+            0%, 100% { transform: scale(9) translateY(0); filter: drop-shadow(0 0 10px var(--flower-pink)); }
+            50% { transform: scale(9.3) translateY(-8px); filter: drop-shadow(0 0 25px var(--flower-red)); }
+        }
+
+        #result-screen { position: relative; justify-content: flex-end; padding-bottom: 60px; }
+        #result-score-corner {
+            position: absolute; bottom: 30px; right: 40px;
+            font-size: 18px; color: #666; text-align: right; line-height: 1.6;
         }
 
         #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 40px; }
         .stat-bar { width: 45%; border: 3px solid var(--neon-pink); padding: 20px; font-size: 26px; font-weight: bold; }
-        #question-display { min-height: 200px; display: flex; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #444; margin-bottom: 30px; }
-        #q-text { font-size: 48px; line-height: 1.5; color: #fff; text-shadow: 0 0 15px var(--neon-blue); font-weight: bold; }
+        #question-display { min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #444; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+        #q-text { font-size: 36px; line-height: 1.5; color: #fff; text-shadow: 0 0 15px var(--neon-blue); font-weight: bold; }
+        #q-type-badge { font-size: 14px; color: var(--neon-pink); font-family: 'Press Start 2P', cursive; margin-bottom: 10px; }
         
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; width: 100%; }
-        .options-grid .btn { font-family: sans-serif; font-size: 32px; font-weight: bold; padding: 25px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+        /* 4選項時用更小字體 */
+        .options-grid.four-opts .btn { font-family: "Microsoft JhengHei", sans-serif; font-size: 22px; font-weight: bold; padding: 18px 15px; text-align: left; }
+        /* 短答案（字謎/拼音）保持大字 */
+        .options-grid.short-opts .btn { font-family: sans-serif; font-size: 30px; font-weight: bold; padding: 22px; }
 
-        #timer-container { width: 100%; height: 15px; background: #000; border: 2px solid #444; margin: 20px 0; }
+        #timer-container { width: 100%; height: 15px; background: #000; border: 2px solid #444; margin: 10px 0 15px; }
         #timer-bar { width: 100%; height: 100%; background: var(--neon-green); transition: width 0.1s linear; }
 
-        #feedback { font-size: 32px; margin-top: 25px; height: 40px; font-weight: bold; }
+        #feedback { font-size: 28px; margin-top: 15px; height: 36px; font-weight: bold; }
+
+        /* 難度說明標籤 */
+        .diff-desc { font-size: 16px; color: #888; margin-top: -10px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -132,10 +145,13 @@
             <div class="char-card" id="c2" onclick="selectChar('助教')">助教<br><small>技術+30</small></div>
             <div class="char-card" id="c3" onclick="selectChar('老師')">老師<br><small>經驗+50</small></div>
         </div>
-        <div style="display:flex">
-            <button class="btn" onclick="setDiff('easy')">簡單《字謎》</button>
-            <button class="btn" onclick="setDiff('normal')">普通《文化/成語》</button>
-            <button class="btn" onclick="setDiff('hard')">困難《綜合混戰》</button>
+        <div style="display:flex; flex-direction: column; align-items: center;">
+            <div style="display:flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn" onclick="setDiff('easy')">簡單模式</button>
+                <button class="btn" onclick="setDiff('normal')">普通模式</button>
+                <button class="btn" onclick="setDiff('hard')">困難模式</button>
+            </div>
+            <p class="diff-desc">簡單：字謎＋漢字結構　｜　普通：拼音＋成語　｜　困難：文化知識</p>
         </div>
     </div>
 
@@ -161,154 +177,454 @@
             <div class="stat-bar" id="ai-score" style="border-color: var(--neon-pink);">AI: 0</div>
         </div>
         <div id="timer-container"><div id="timer-bar"></div></div>
-        <div id="question-display"><h2 id="q-text">傳輸中...</h2></div>
-        <div id="audio-ui" style="display:none; margin-bottom: 15px;"><button class="btn" style="padding: 10px 25px; font-size: 14px;" onclick="playAudio()">🔊 監聽題目</button></div>
+        <div id="question-display">
+            <span id="q-type-badge"></span>
+            <h2 id="q-text">傳輸中...</h2>
+        </div>
         <div class="options-grid" id="options-box"></div>
         <p id="feedback"></p>
     </div>
 
     <div id="result-screen" class="screen">
         <div class="pixel-flower" id="flower-reward"></div>
-        <h1 id="result-msg" style="font-size: 40px; color: var(--neon-green);">任務結束</h1>
-        <div id="score-report" style="margin-bottom:30px; font-size: 24px; line-height: 1.8; color: #ccc;"></div>
+        <h1 id="result-msg" style="font-size: 44px; color: var(--neon-green); margin-bottom: 30px;">任務結束</h1>
+        <div id="mother-msg" style="display:none; font-size: 36px; font-weight: bold; color: white; text-shadow: 0 0 20px var(--flower-pink); margin-bottom: 40px; letter-spacing: 2px;">這束花，送給最親愛的媽媽！</div>
         <button class="btn" style="font-size: 24px;" onclick="location.reload()">重新遠征</button>
+        <div id="result-score-corner"></div>
     </div>
 </div>
 
 <script>
-// RAW_QB 題庫維持完整 80 題
-const RAW_QB = {
-    riddle: [
-        {q:"一人一張口。",a:"合",w:["含","答","口"]}, {q:"兩人在內。",a:"肉",w:["內","囚","網"]}, {q:"哪個漢字要寫最久？",a:"朋",w:["友","好","鵬"]}, {q:"一心向上。",a:"必",w:["忘","忌","心"]}, {q:"一隻狗有四張口。",a:"器",w:["哮","嚎","囂"]}, {q:"一隻黑狗，不叫不吼。",a:"默",w:["黑","靜","暗"]}, {q:"太陽的兒子。",a:"星",w:["旦","晨","昇"]}, {q:"手提包。",a:"抱",w:["提","握","包"]}, {q:"半真半假。",a:"值",w:["真","假","信"]}, {q:"七十二小時。",a:"晶",w:["品","昌","明"]}, {q:"大雨落在橫山上。",a:"雪",w:["雨","霜","霧"]}, {q:"夫人何處去。",a:"二",w:["夫","去","大"]}, {q:"山下之風。",a:"嵐",w:["風","嶺","峰"]}, {q:"守門員。",a:"閃",w:["門","閉","開"]}, {q:"自大加一點。",a:"臭",w:["自","大","太"]}, {q:"自有一人在口中。",a:"囚",w:["困","囝","囤"]}, {q:"我沒有他有，天沒有地有。",a:"也",w:["地","他","她"]}, {q:"兩點水。",a:"冰",w:["水","冷","凍"]}, {q:"皇帝的新衣。",a:"襲",w:["衣","裸","服"]}, {q:"太陽打西邊出來。",a:"晒",w:["曬","晾","晃"]}, {q:"竹下有寺。",a:"等",w:["寺","竹","待"]}, {q:"雲上出太陽。",a:"曇",w:["雲","晴","陰"]}, {q:"雷而無雨。",a:"田",w:["電","雷","雨"]}, {q:"遠看像頭牛，近看沒有頭。",a:"午",w:["牛","年","牟"]}, {q:"說話聲太大。",a:"誇",w:["大","說","話"]}, {q:"大口帶小口。",a:"回",w:["口","囗","囘"]}, {q:"多一半。",a:"夕",w:["多","半","大"]}, {q:"此字不難猜，孔子隔壁栽。",a:"子",w:["孔","鄰","李"]}, {q:"太陽西邊下，月亮東邊掛。",a:"明",w:["日","月","朗"]}, {q:"不上不下。",a:"卡",w:["上","下","中"]}, {q:"山上還有山。",a:"出",w:["山","峰","嶺"]}, {q:"半部春秋。",a:"秦",w:["春","秋","半"]}, {q:"鏡中人。",a:"入",w:["人","反","鏡"]}, {q:"真心相伴。",a:"慎",w:["真","心","忍"]}, {q:"早不說，晚不說。",a:"許",w:["早","晚","話"]}, {q:"一月七日。",a:"脂",w:["月","日","肪"]}, {q:"一邊紅，一邊綠，一邊怕雨，一邊怕風。",a:"秋",w:["春","夏","冬"]}, {q:"人不在其位。",a:"立",w:["位","人","在"]}, {q:"人在草木間。",a:"茶",w:["草","木","藏"]}, {q:"日復一日。",a:"昌",w:["日","旦","旭"]}, {q:"頂破天。",a:"夫",w:["天","大","丈"]}, {q:"此木為啥？",a:"柴",w:["木","此","材"]}, {q:"一大二小。",a:"奈",w:["大","小","奇"]}, {q:"太陽出現在地平線上。",a:"旦",w:["日","旭","昇"]}, {q:"半個月亮。",a:"胖",w:["月","肉","半"]}, {q:"十一個人。",a:"仕",w:["十","人","什"]}, {q:"一字十一口。",a:"吉",w:["一","十","古"]}, {q:"誰是傻瓜？",a:"保",w:["愚","笨","呆"]}, {q:"千里姻緣一線牽。",a:"重",w:["千","里","線"]}, {q:"請勿入口。",a:"囫",w:["入","口","圈"]}
-    ],
-    culture: [
-        {q:"下列何者是宋代以後主要的私學機構？",a:"書院",w:["精舍","國子監","太學"]}, {q:"哪句成語顯示服飾具有區隔夷夏的作用？",a:"被髮左衽",w:["布衣卿相","衣冠禽獸","沐猴而冠"]}, {q:"關於「清明上河圖」，下列何者正確？",a:"顯示城市的物質進步",w:["完成於明朝","以首都北京為題材","突顯文人清談之風"]}, {q:"下列何者不是孔學的影響？",a:"官學從此消失",w:["百家相繼興起","促進階級流動","開創師生共學團體"]}, {q:"職業戲班俗稱？",a:"梨園",w:["崑園","京園","旗園"]}, {q:"北京故宮「紫禁城」名稱由來？",a:"紫微星正處中天",w:["紫色比朱紅重大","黃袍搭配合宜","萬紫千紅喜氣"]}, {q:"「穿針乞巧」與哪個節日有關？",a:"七夕節",w:["上元節","元宵節","端午節"]}, {q:"過年時吃水餃，象徵什麼？",a:"財富",w:["健康","團圓","平安"]}, {q:"「菩提本無樹，明鏡亦非台」是哪個宗派？",a:"禪宗",w:["密宗","天台宗","華嚴宗"]}, {q:"《本草綱目》的作者是誰？",a:"李時珍",w:["孫思邈","華佗","扁鵲"]}, {q:"台灣著名的「五月雪」是哪種花？",a:"油桐花",w:["桂花","鳳凰花","玉蘭花"]}
-    ],
-    idiom: [
-        {q:"「胸有成竹」現用來比喻什麼？",a:"很有把握",w:["為人正直","孤芳自賞","內心空虛"]}, {q:"哪成語形容「文章極好，非常有價值」？",a:"洛陽紙貴",w:["韋編三絕","汗牛充棟","買櫝還珠"]}, {q:"「不恥下問」的意思是？",a:"不以向低者請教為恥",w:["羞於向低位者請教","不向無學問者提問","常問愚蠢問題"]}, {q:"「破釜沉舟」與哪位歷史人物有關？",a:"項羽",w:["劉邦","韓信","諸葛亮"]}, {q:"「望洋興嘆」現多比喻什麼？",a:"做事力不從心",w:["欣賞美景","登高望遠","哀悼逝者"]}, {q:"「目不識丁」形容一個人？",a:"認識字",w:["視力不好","專注工作","傲慢無禮"]}, {q:"「狐假虎威」狐狸藉老虎什麼嚇走百獸？",a:"威風",w:["聲音","氣味","速度"]}, {q:"「邯鄲學步」告訴我們？",a:"模仿別人反丟了本領",w:["學習要刻苦","走路姿勢重要","活到老學到老"]}, {q:"「脫穎而出」現用來形容？",a:"顯露才幹",w:["擺脫困境","發生意外","穿衣風格"]}, {q:"「世外桃源」出自哪位作家？",a:"陶淵明",w:["蘇軾","王維","李白"]}, {q:"「再接再___」正確的字？",a:"厲",w:["勵","力","歷"]}, {q:"「一鼓作____」正確的字？",a:"氣",w:["汽","器","棄"]}
-    ],
-    audio: [
-        {q:"聽音選出『小米酒』正確變調：", a:"ㄒㄧㄠˇ ㄇㄧˊ ㄐㄧㄡˇ", w:["ㄒㄧㄠˇ ㄇㄧˇ ㄐㄧㄡˇ", "ㄒㄧㄠˊ ㄇㄧˊ ㄐㄧㄡˇ"], text:"小米酒"},
-        {q:"聽音選出『仍然』正確讀音：", a:"ㄖㄥˊ ㄖㄢˊ", w:["ㄌㄥˊ ㄌㄢˊ", "ㄖㄣˊ ㄖㄢˊ"], text:"仍然"},
-        {q:"聽音選出『水彩筆』正確變調：", a:"ㄕㄨㄟˇ ㄘㄞˊ ㄅㄧˇ", w:["ㄕㄨㄟˇ ㄘㄞˇ ㄅㄧˇ", "ㄕㄨㄟˊ ㄘㄞˊ ㄅㄧˇ"], text:"水彩筆"}
-    ]
+// ===================== 題庫 QB =====================
+const QB = {
+  riddle: [
+    {q:"一人一張口。",a:"合",w:["含","答","口"]},
+    {q:"兩人在內。",a:"肉",w:["內","囚","網"]},
+    {q:"一心向上。",a:"必",w:["忘","忌","心"]},
+    {q:"一隻狗有四張口。",a:"器",w:["哮","嚎","囂"]},
+    {q:"一隻黑狗，不叫不吼。",a:"默",w:["黑","靜","暗"]},
+    {q:"太陽的兒子。",a:"星",w:["旦","晨","昇"]},
+    {q:"手提包。",a:"抱",w:["提","握","包"]},
+    {q:"半真半假。",a:"值",w:["真","假","信"]},
+    {q:"七十二小時。",a:"晶",w:["品","昌","明"]},
+    {q:"大雨落在橫山上。",a:"雪",w:["雨","霜","霧"]},
+    {q:"夫人何處去。",a:"二",w:["夫","去","大"]},
+    {q:"山下之風。",a:"嵐",w:["風","嶺","峰"]},
+    {q:"守門員。",a:"閃",w:["門","閉","開"]},
+    {q:"我沒有他有，天沒有地有。",a:"也",w:["地","他","她"]},
+    {q:"兩點水。",a:"冰",w:["水","冷","凍"]},
+    {q:"皇帝的新衣。",a:"襲",w:["衣","裸","服"]},
+    {q:"太陽打西邊出來。",a:"晒",w:["曬","晾","晃"]},
+    {q:"竹下有寺。",a:"等",w:["寺","竹","待"]},
+    {q:"雲上出太陽。",a:"曇",w:["雲","晴","陰"]},
+    {q:"雷而無雨。",a:"田",w:["電","雷","護"]},
+    {q:"遠看像頭牛，近看沒有頭。",a:"午",w:["牛","年","牟"]},
+    {q:"說話聲太大。",a:"誇",w:["大","說","話"]},
+    {q:"大口帶小口。",a:"回",w:["口","囗","囘"]},
+    {q:"多一半。",a:"夕",w:["多","半","大"]},
+    {q:"此字不難猜，孔子隔壁栽。",a:"子",w:["孔","鄰","李"]},
+    {q:"太陽西邊下，月亮東邊掛。",a:"明",w:["日","月","朗"]},
+    {q:"不上不下。",a:"卡",w:["上","下","中"]},
+    {q:"山上還有山。",a:"出",w:["山","峰","嶺"]},
+    {q:"半部春秋。",a:"秦",w:["春","秋","半"]},
+    {q:"鏡中人。",a:"入",w:["人","反","鏡"]},
+    {q:"真心相伴。",a:"慎",w:["真","心","忍"]},
+    {q:"早不說，晚不說。",a:"許",w:["早","晚","話"]},
+    {q:"人不在其位。",a:"立",w:["位","人","在"]},
+    {q:"人在草木間。",a:"茶",w:["草","木","藏"]},
+    {q:"日復一日。",a:"昌",w:["日","旦","旭"]},
+    {q:"一大二小。",a:"奈",w:["大","小","奇"]},
+    {q:"半個月亮。",a:"胖",w:["月","肉","半"]},
+    {q:"十一個人。",a:"仕",w:["十","人","什"]},
+    {q:"一字十一口。",a:"吉",w:["一","十","古"]},
+    {q:"誰是傻瓜？",a:"保",w:["愚","笨","呆"]},
+    {q:"請勿入口。",a:"囫",w:["入","口","圈"]},
+  ],
+
+  kanji_structure: [
+    { q: "「校」的部首是什麼？", a: "木", w: ["交", "卜", "文"] },
+    { q: "「媽」的部首是什麼？", a: "女", w: ["馬", "口", "一"] },
+    { q: "「跑」的部首是什麼？", a: "足", w: ["包", "止", "口"] },
+    { q: "「甜」的部首是什麼？", a: "甘", w: ["舌", "口", "十"] },
+    { q: "「遠」的部首是什麼？", a: "辶", w: ["袁", "土", "口"] },
+    { q: "「打」的部首是什麼？", a: "扌", w: ["丁", "一", "丨"] },
+    { q: "「雷」的部首是什麼？", a: "雨", w: ["田", "雲", "電"] },
+    { q: "「草」的部首是什麼？", a: "艹", w: ["早", "日", "十"] },
+    { q: "「臉」的部首是什麼？", a: "肉", w: ["僉", "口", "頁"] },
+    { q: "「狗」的部首是什麼？", a: "犭", w: ["句", "口", "勹"] },
+    { q: "「這」的部首是什麼？", a: "辶", w: ["言", "文", "止"] },
+    { q: "「跳」的部首是什麼？", a: "足", w: ["兆", "止", "目"] },
+    { q: "「晨」的部首是什麼？", a: "日", w: ["辰", "止", "廠"] },
+    { q: "「唱」的部首是什麼？", a: "口", w: ["昌", "日", "舌"] },
+    { q: "「睡」的部首是什麼？", a: "目", w: ["垂", "禾", "十"] },
+    { q: "「海」的部首是什麼？", a: "氵", w: ["每", "人", "母"] },
+    { q: "「燈」的部首是什麼？", a: "火", w: ["登", "丁", "皿"] },
+    { q: "「願」的部首是什麼？", a: "頁", w: ["原", "心", "白"] },
+    { q: "「站」的部首是什麼？", a: "立", w: ["占", "口", "卜"] },
+    { q: "「空」的部首是什麼？", a: "穴", w: ["工", "宀", "八"] },
+    { q: "亻 ＋ 本 = ？", a: "体", w: ["笨", "體", "推"] },
+    { q: "口 ＋ 牙 = ？", a: "呀", w: ["穿", "鴉", "訝"] },
+    { q: "日 ＋ 月 = ？", a: "明", w: ["旦", "玥", "閒"] },
+    { q: "女 ＋ 子 = ？", a: "好", w: ["如", "媽", "耍"] },
+    { q: "門 ＋ 市 = ？", a: "鬧", w: ["闖", "閃", "問"] },
+    { q: "木 ＋ 木 = ？", a: "林", w: ["森", "相", "札"] },
+    { q: "氵 ＋ 青 = ？", a: "清", w: ["請", "睛", "精"] },
+    { q: "忄 ＋ 曼 = ？", a: "慢", w: ["漫", "饅", "蔓"] },
+    { q: "忄 ＋ 亡 = ？", a: "忙", w: ["忘", "盲", "妄"] },
+    { q: "山 ＋ 夆 = ？", a: "峰", w: ["鋒", "蜂", "烽"] },
+    { q: "口 ＋ 昌 = ？", a: "唱", w: ["倡", "猖", "冒"] },
+    { q: "目 ＋ 青 = ？", a: "睛", w: ["情", "清", "晴"] },
+    { q: "舌 ＋ 甘 = ？", a: "甜", w: ["恬", "亂", "辭"] },
+    { q: "亻 ＋ 呆 = ？", a: "保", w: ["何", "伴", "信"] },
+    { q: "禾 ＋ 火 = ？", a: "秋", w: ["愁", "秒", "炒"] },
+    { q: "竹 ＋ 毛 = ？", a: "筆", w: ["笛", "笨", "筐"] },
+    { q: "口 ＋ 鳥 = ？", a: "鳴", w: ["雞", "鴨", "鵝"] },
+    { q: "言 ＋ 成 = ？", a: "誠", w: ["城", "盛", "減"] },
+    { q: "小 ＋ 大 = ？", a: "尖", w: ["塵", "奈", "夯"] },
+    { q: "牛 ＋ 寺 = ？", a: "特", w: ["持", "等", "詩"] }
+  ],
+
+  // 文化知識 — ABCD 選項格式 (opts陣列, a為正確選項字母)
+  culture: [
+    {q:"下列何者是宋代以後主要的私學機構？",a:"A",opts:["(A)書院","(B)精舍","(C)國子監","(D)太學"]},
+    {q:"哪句成語顯示服飾具有區隔夷夏的作用？",a:"C",opts:["(A)布衣卿相","(B)衣冠禽獸","(C)被髮左衽","(D)沐猴而冠"]},
+    {q:"關於「清明上河圖」，下列何者正確？",a:"C",opts:["(A)完成於明朝","(B)以首都北京為題材","(C)顯示城市的物質進步","(D)突顯文人清談之風"]},
+    {q:"下列何者不是孔學的影響？",a:"B",opts:["(A)百家相繼興起","(B)官學從此消失","(C)促進階級流動","(D)開創師生共學團體"]},
+    {q:"職業戲班俗稱？",a:"D",opts:["(A)崑園","(B)京園","(C)旗園","(D)梨園"]},
+    {q:"唐宋以後「家家觀世音，戶戶阿彌陀」主要原因？",a:"A",opts:["(A)教義思想的中國化","(B)僧侶積極布施","(C)士大夫的崇信","(D)寺院財產龐大"]},
+    {q:"北京故宮「紫禁城」名稱由來？",a:"C",opts:["(A)紫色比朱紅重大","(B)紫色與黃袍搭配合宜","(C)紫微星正處中天","(D)萬紫千紅喜氣"]},
+    {q:"「穿針乞巧」與哪個節日有關？",a:"D",opts:["(A)上元節","(B)元宵節","(C)端午節","(D)七夕節"]},
+    {q:"過年時吃水餃，象徵什麼？",a:"C",opts:["(A)健康","(B)團圓","(C)財富","(D)平安"]},
+    {q:"「菩提本無樹，明鏡亦非台」是哪個宗派？",a:"A",opts:["(A)禪宗","(B)密宗","(C)天台宗","(D)華嚴宗"]},
+    {q:"《本草綱目》的作者是誰？",a:"C",opts:["(A)孫思邈","(B)華佗","(C)李時珍","(D)扁鵲"]},
+    {q:"宋代理學融通儒家與哪種思想？",a:"C",opts:["(A)墨、法","(B)佛、法","(C)佛、道","(D)名、法"]},
+    {q:"台灣「紅毛城」中「紅毛」指？",a:"B",opts:["(A)西班牙人","(B)荷蘭人","(C)英國人","(D)葡萄牙人"]},
+    {q:"最早在台灣建立孔廟的是？",a:"A",opts:["(A)鄭經","(B)鄭成功","(C)劉銘傳","(D)丁日昌"]},
+    {q:"新竹地區「九降風」成就的重要食材？",a:"A",opts:["(A)米粉","(B)粉圓","(C)冬粉","(D)意麵"]},
+    {q:"中國飲茶之風，至何時茶館成為庶民文化？",a:"B",opts:["(A)唐","(B)宋","(C)元","(D)明"]},
+    {q:"台灣著名的「五月雪」是哪種花？",a:"B",opts:["(A)桂花","(B)油桐花","(C)鳳凰花","(D)玉蘭花"]},
+    {q:"下列何者為新大陸引進的作物？",a:"A",opts:["(A)番薯","(B)胡椒","(C)西瓜","(D)洋蔥"]},
+    {q:"日語與台語稱麵包為「PANG」，淵源哪種語言？",a:"C",opts:["(A)英語","(B)韓語","(C)葡萄牙語","(D)台灣原住民語"]},
+    {q:"西周封建宗法制度依何種關係建立準則？",a:"C",opts:["(A)行業職能","(B)才識表現","(C)血緣尊卑","(D)社經地位"]},
+    {q:"記錄家族世系及成員關係的文書稱為？",a:"B",opts:["(A)家法","(B)家譜","(C)家學","(D)家風"]},
+    {q:"宋代何人開始設置族田、義莊？",a:"A",opts:["(A)范仲淹","(B)朱熹","(C)歐陽脩","(D)蘇洵"]},
+    {q:"【廟宇裝飾】屋脊上彩色碎瓷片拼貼而成的工法稱為？",a:"C",opts:["(A)泥塑","(B)木雕","(C)剪黏","(D)彩繪"]},
+    {q:"【守護神靈】城隍廟裡緝拿惡人的兩位將軍是？",a:"B",opts:["(A)千里眼與順風耳","(B)七爺與八爺","(C)土地公與土地婆","(D)文判官與武判官"]},
+    {q:"【節慶習俗】冬至吃哪種食物象徵團圓與增加一歲？",a:"C",opts:["(A)粽子","(B)潤餅","(C)湯圓","(D)月餅"]},
+    {q:"【中元節】農曆七月十五日邀請「好兄弟」的儀式稱作？",a:"B",opts:["(A)繞境","(B)普度","(C)刈香","(D)建醮"]},
+    {q:"【工藝之美】高雄美濃以製作哪種工藝品聞名？",a:"B",opts:["(A)陶瓷","(B)油紙傘","(C)藺草帽","(D)竹籠"]},
+    {q:"「艋舺」原意是指小船，源自哪種語系？",a:"C",opts:["(A)荷蘭語","(B)閩南語","(C)原住民語（平埔族）","(D)客家語"]},
+    {q:"台灣「辦桌」負責指揮調度整場宴席的主廚是？",a:"B",opts:["(A)店小二","(B)總舖師","(C)跑堂","(D)掌櫃"]},
+    {q:"金門地區隨處可見用來鎮風辟邪的石刻像是？",a:"B",opts:["(A)石敢當","(B)風獅爺","(C)劍獅","(D)麒麟"]},
+  ],
+
+  // 成語 — ABCD 選項格式
+  idiom: [
+    {q:"「胸有成竹」現用來比喻什麼？",a:"B",opts:["(A)為人正直","(B)很有把握","(C)孤芳自賞","(D)內心空虛"]},
+    {q:"哪成語形容「文章極好，非常有價值」？",a:"A",opts:["(A)洛陽紙貴","(B)韋編三絕","(C)汗牛充棟","(D)買櫝還珠"]},
+    {q:"「不恥下問」的意思是？",a:"C",opts:["(A)羞於向低位者請教","(B)不向無學問者提問","(C)不以向低者請教為恥","(D)常問愚蠢問題"]},
+    {q:"「破釜沉舟」與哪位歷史人物有關？",a:"B",opts:["(A)劉邦","(B)項羽","(C)韓信","(D)諸葛亮"]},
+    {q:"「刎頸之交」形容？",a:"B",opts:["(A)貌合神離","(B)關係非常親密","(C)萍水相逢","(D)一面之緣"]},
+    {q:"「望洋興嘆」現多比喻什麼？",a:"B",opts:["(A)欣賞美景","(B)做事力不從心","(C)登高望遠","(D)哀悼逝者"]},
+    {q:"「目不識丁」形容一個人？",a:"B",opts:["(A)視力不好","(B)不識字","(C)專注工作","(D)傲慢無禮"]},
+    {q:"「草船借箭」的主角是？",a:"C",opts:["(A)周瑜","(B)曹操","(C)諸葛亮","(D)魯肅"]},
+    {q:"「班門弄斧」的「班」指？",a:"C",opts:["(A)班固","(B)班超","(C)魯班","(D)班捷明"]},
+    {q:"「三顧茅廬」是誰去拜訪誰？",a:"C",opts:["(A)曹操訪郭嘉","(B)孫權訪周瑜","(C)劉備訪諸葛亮","(D)趙雲訪黃忠"]},
+    {q:"「狐假虎威」狐狸藉老虎什麼嚇走百獸？",a:"C",opts:["(A)聲音","(B)氣味","(C)威風","(D)速度"]},
+    {q:"「邯鄲學步」告訴我們？",a:"B",opts:["(A)學習要刻苦","(B)模仿別人反丟了本領","(C)走路姿勢很重要","(D)活到老學到老"]},
+    {q:"「脫穎而出」現用來形容？",a:"A",opts:["(A)顯露才幹","(B)擺脫困境","(C)發生意外","(D)穿衣風格"]},
+    {q:"「望梅止渴」與哪位歷史人物有關？",a:"A",opts:["(A)曹操","(B)劉備","(C)袁紹","(D)董卓"]},
+    {q:"「世外桃源」出自哪位作家？",a:"B",opts:["(A)蘇軾","(B)陶淵明","(C)王維","(D)李白"]},
+    {q:"下列成語字形「正確」的是？",a:"B",opts:["(A)鞠躬盡萃","(B)鞠躬盡瘁","(C)鞠躬盡粹","(D)鞠躬盡碎"]},
+    {q:"「再接再___」正確的字？",a:"B",opts:["(A)勵","(B)厲","(C)力","(D)歷"]},
+    {q:"「變本加____」正確填入？",a:"A",opts:["(A)厲","(B)利","(C)力","(D)勵"]},
+    {q:"「走投____路」正確填入？",a:"C",opts:["(A)謀","(B)沒","(C)無","(D)埋"]},
+    {q:"「世外桃____」正確填入？",a:"A",opts:["(A)源","(B)原","(C)園","(D)緣"]},
+    {q:"「按____就班」正確填入？",a:"A",opts:["(A)步","(B)部","(C)佈","(D)不"]},
+    {q:"「一鼓作____」正確填入？",a:"B",opts:["(A)汽","(B)氣","(C)鼓","(D)棄"]},
+    {q:"「自怨自____」正確填入？",a:"A",opts:["(A)艾","(B)哎","(C)唉","(D)愛"]},
+    {q:"「濫___充數」正確填入？",a:"A",opts:["(A)竽","(B)竿","(C)筍","(D)芋"]},
+    {q:"「怨天____人」正確填入？",a:"A",opts:["(A)尤","(B)優","(C)憂","(D)由"]},
+    {q:"「畫蛇添足」近義詞為？",a:"A",opts:["(A)多此一舉","(B)雪中送炭","(C)錦上添花","(D)精益求精"]},
+    {q:"「緣木求魚」比喻？",a:"B",opts:["(A)勤勞工作","(B)方法不對必難達目的","(C)愛護環境","(D)追求夢想"]},
+    {q:"「掩耳盜鈴」比喻？",a:"B",opts:["(A)聰明反被聰明誤","(B)自欺欺人","(C)聽覺敏銳","(D)做事隱密"]},
+    {q:"「聞雞起舞」形容？",a:"B",opts:["(A)喜愛跳舞","(B)志士及時奮發努力","(C)畜牧業興旺","(D)生活悠閒"]},
+    {q:"「守株待兔」農夫犯了什麼錯誤？",a:"B",opts:["(A)懶惰","(B)死守經驗不知變通","(C)運氣不好","(D)殘害動物"]},
+    {q:"「老馬識途」中老馬比喻？",a:"B",opts:["(A)體力不支的人","(B)富有經驗的人","(C)迷失方向的人","(D)不聽指揮的人"]},
+    {q:"「井底之蛙」形容人？",a:"B",opts:["(A)謙虛好學","(B)見識狹窄","(C)擅長游泳","(D)居住簡陋"]},
+    {q:"「螳臂當車」比喻？",a:"B",opts:["(A)勇往直前","(B)不自量力","(C)守衛家園","(D)交通違規"]},
+    {q:"「塞翁失馬」下一句接什麼？",a:"B",opts:["(A)必有後福","(B)焉知非福","(C)禍不單行","(D)因小失大"]},
+    {q:"「紙上談兵」是指誰？",a:"A",opts:["(A)趙括","(B)廉頗","(C)白起","(D)藺相如"]},
+    {q:"「入木三分」原本形容？",a:"B",opts:["(A)劍法高超","(B)書法有力","(C)刻功深厚","(D)觀察敏銳"]},
+    {q:"「驚弓之鳥」比喻？",a:"A",opts:["(A)受驚後極度惶恐的人","(B)飛得很快的鳥","(C)箭術高明","(D)膽大包天"]},
+    {q:"「水落石出」現在多比喻？",a:"B",opts:["(A)風景優美","(B)事情真相大白","(C)潮汐規律","(D)資源匱乏"]},
+    {q:"「差之毫釐，失之____」？",a:"B",opts:["(A)萬丈","(B)千里","(C)百里","(D)須臾"]},
+    {q:"「半途而廢」的反義詞？",a:"B",opts:["(A)功虧一簣","(B)鍥而不捨","(C)淺嘗輒止","(D)虎頭蛇尾"]},
+    {q:"「罄竹難書」通常形容？",a:"B",opts:["(A)功勳卓著","(B)罪惡極多","(C)歷史悠久","(D)才華洋溢"]},
+    {q:"「飽經風霜」形容？",a:"B",opts:["(A)環境極優越","(B)歷經磨難","(C)心情極輕鬆","(D)衣食無虞"]},
+    {q:"成語「一鳴驚人」的主人公是？",a:"A",opts:["(A)楚莊王","(B)齊威王","(C)秦始皇","(D)漢武帝"]},
+    {q:"「四面楚歌」形容處境？",a:"C",opts:["(A)意外大勝","(B)力挽狂瀾","(C)四面受敵、孤立無援","(D)重振旗鼓"]},
+    {q:"「完璧歸趙」主要人物？",a:"B",opts:["(A)廉頗","(B)藺相如","(C)趙括","(D)藺相公"]}
+  ],
+
+  // 拼音 — 字串比對格式 (a為正確答案, w為錯誤選項)
+  pinyin: [
+    {q:"「南港展覽館」的拼音？",a:"Nángǎng Zhǎnlǎnguǎn",w:["Lángǎng Zhǎnlǎnguǎn","Nángǎn Zhǎnlǎnguǎn","Nángǎng Zhǎnlǎguǎn"]},
+    {q:"「內湖」的拼音？",a:"Nèihú",w:["Lèihú","Nèihóu","Nèihóng"]},
+    {q:"「大直」的拼音？",a:"Dàzhí",w:["Dàzí","Tàzhí","Dàzhǐ"]},
+    {q:"「松山機場」的拼音？",a:"Sōngshān Jīchǎng",w:["Shōngshān Jīchǎng","Sōngsuān Jīchǎng","Sōngshān Jīcǎng"]},
+    {q:"「南京復興」的拼音？",a:"Nánjīng Fùxīng",w:["Lánjīng Fùxīng","Nánjīn Fùxīng","Nánjīng Fùxīn"]},
+    {q:"「忠孝復興」的拼音？",a:"Zhōngxiào Fùxīng",w:["Zōngxiào Fùxīng","Zhōngxiào Fùxīn","Zhòngxiào Fùxīng"]},
+    {q:"「大安」的拼音？(注意隔音符號)",a:"Dà'ān",w:["Dàān","Tà'ān","Dà'āng"]},
+    {q:"「科技大樓」的拼音？",a:"Kējì Dàlóu",w:["Chējì Dàlóu","Kējì Tàlóu","Kēzhì Dàlóu"]},
+    {q:"「萬芳社區」的拼音？",a:"Wànfāng Shèqū",w:["Wànfāng Sèqū","Wànfān Shèqū","Wànfāng Shèqǖ"]},
+    {q:"「動物園」的拼音？",a:"Dòngwùyuán",w:["Dòngwùyán","Tòngwùyuán","Dòngwùyuǎn"]},
+    {q:"「淡水」的拼音？",a:"Dànshuǐ",w:["Dànsuǐ","Tànshuǐ","Dànshǔi"]},
+    {q:"「紅樹林」的拼音？",a:"Hóngshùlín",w:["Hóngsùlín","Hóngshùlíng","Hóngshùlǐn"]},
+    {q:"「北投」的拼音？",a:"Běitóu",w:["Běidóu","Běitó","Bēitóu"]},
+    {q:"「士林」的拼音？",a:"Shìlín",w:["Sìlín","Shìlíng","Shìlǐn"]},
+    {q:"「劍潭」的拼音？",a:"Jiàntán",w:["Jiàntáng","Qiàntán","Jiǎntán"]},
+    {q:"「圓山」的拼音？",a:"Yuánshān",w:["Yuánsuān","Yánshān","Yuánshā"]},
+    {q:"「台北車站」的拼音？",a:"Táiběi Chēzhàn",w:["Táiběi Cēzàn","Táiběi Chēzàn","Táběi Chēzhàn"]},
+    {q:"「中正紀念堂」的拼音？",a:"Zhōngzhèng Jìniàntáng",w:["Zōngzèng Jìniàntáng","Zhōngzhèng Jìniàntán","Zhōngzhèng Jìnàitáng"]},
+    {q:"「松山」的拼音？",a:"Sōngshān",w:["Shōngshān","Sōngsuān","Shōngsuān"]},
+    {q:"「西門」的拼音？",a:"Xīmén",w:["Xīmín","Xīměn","Xīmèng"]},
+    {q:"「古亭」的拼音？",a:"Gǔtíng",w:["Kǔtíng","Gǔtín","Gǔtǐng"]},
+    {q:"「公館」的拼音？",a:"Gōngguǎn",w:["Gōngguān","Kōngguǎn","Gòngguǎn"]},
+    {q:"「景美」的拼音？",a:"Jǐngměi",w:["Jǐnměi","Qǐngměi","Jǐngmǐ"]},
+    {q:"「新店」的拼音？",a:"Xīndiàn",w:["Xìndiàn","Xīntiàn","Shīndiàn"]},
+    {q:"「蘆洲」的拼音？",a:"Lúzhōu",w:["Lúzōu","Núzhōu","Lùzhōu"]},
+    {q:"「三重」的拼音？",a:"Sānzhòng",w:["Shānzhòng","Sānzòng","Sāndòng"]},
+    {q:"「民權西路」的拼音？",a:"Mínquán Xīlù",w:["Míngquán Xīlù","Mínquán Shīlù","Mínquáng Xīlù"]},
+    {q:"「行天宮」的拼音？",a:"Xíngtiāngōng",w:["Xíntiāngōng","Shíngtiāngōng","Xíngtiāngóng"]},
+    {q:"「永安市場」的拼音？(隔音符號)",a:"Yǒng'ān Shìchǎng",w:["Yǒngān Shìchǎng","Yǒng'āng Shìcǎng","Yǒng'ān Sìcǎng"]},
+    {q:"「景安」的拼音？(隔音符號)",a:"Jǐng'ān",w:["Jǐngān","Jǐn'ān","Qǐng'ān"]},
+    {q:"「龍山寺」的拼音？",a:"Lóngshānsì",w:["Lóngsuānsì","Lóngsuānshì","Lóngshānshì"]},
+    {q:"「板橋」的拼音？",a:"Bǎnqiáo",w:["Pǎnqiáo","Bǎnqiǎo","Bǎnjiáo"]},
+    {q:"「府中」的拼音？",a:"Fǔzhōng",w:["Fǔzōng","Hǔzhōng","Fúzhōng"]},
+    {q:"「頂溪」的拼音？",a:"Dǐngxī",w:["Dǐnxī","Tǐngxī","Dǐngshī"]},
+    {q:"「昆陽」的拼音？",a:"Kūnyáng",w:["Kūnyán","Gūnyáng","Kūnyǎng"]},
+  ]
 };
 
-let state = { player: 0, ai: 0, level: 0, difficulty: '', char: '', questions: [], qIdx: 0, timer: null, time: 15, nodePositions: [], playedPool: [], wrongCount: 0 };
+// ===================== 難度對應題型 =====================
+// easy: riddle + kanji_structure
+// normal: pinyin + idiom
+// hard: culture
 
-function goToScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-function selectChar(c) { state.char = c; document.querySelectorAll('.char-card').forEach(card => card.classList.remove('selected')); if(c==='學生') document.getElementById('c1').classList.add('selected'); else if(c==='助教') document.getElementById('c2').classList.add('selected'); else document.getElementById('c3').classList.add('selected'); }
-function setDiff(d) { if(!state.char) return alert("請先選擇身份"); state.difficulty = d; goToScreen('map-screen'); setTimeout(initMapPositions, 150); }
+const DIFF_TYPES = {
+  easy: ['riddle', 'kanji_structure'],
+  normal: ['pinyin', 'idiom'],
+  hard: ['culture']
+};
+
+const TYPE_LABELS = {
+  riddle: '字謎',
+  kanji_structure: '漢字結構',
+  pinyin: '拼音練習',
+  idiom: '成語',
+  culture: '文化知識'
+};
+
+// 判斷題目格式：opts格式(ABCD) or w格式(字串)
+function isOptsFormat(q) { return !!q.opts; }
+
+// 將任一題型題目轉為統一格式 { question, answer(字串), choices(字串陣列), type }
+function normalizeQ(raw, typeName) {
+  if (isOptsFormat(raw)) {
+    // ABCD格式：a 是正確字母，opts陣列含完整選項
+    const correctIdx = raw.a.charCodeAt(0) - 65; // 'A'=0
+    return {
+      question: raw.q,
+      answer: raw.opts[correctIdx],
+      choices: [...raw.opts].sort(() => 0.5 - Math.random()),
+      isLong: true,
+      type: typeName
+    };
+  } else {
+    // 字串格式：a 是正確答案，w是錯誤選項
+    const choices = [raw.a, ...raw.w].sort(() => 0.5 - Math.random());
+    return {
+      question: raw.q,
+      answer: raw.a,
+      choices,
+      isLong: false,
+      type: typeName
+    };
+  }
+}
+
+function getRandQ(typeName) {
+  const pool = QB[typeName];
+  const raw = pool[Math.floor(Math.random() * pool.length)];
+  return normalizeQ(raw, typeName);
+}
+
+// ===================== 遊戲狀態 =====================
+let state = {
+  player: 0, ai: 0, level: 0, difficulty: '', char: '',
+  questions: [], qIdx: 0, timer: null, time: 15,
+  nodePositions: [], playedPool: [], wrongCount: 0
+};
+
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function selectChar(c) {
+  state.char = c;
+  document.querySelectorAll('.char-card').forEach(card => card.classList.remove('selected'));
+  if(c==='學生') document.getElementById('c1').classList.add('selected');
+  else if(c==='助教') document.getElementById('c2').classList.add('selected');
+  else document.getElementById('c3').classList.add('selected');
+}
+
+function setDiff(d) {
+  if(!state.char) return alert("請先選擇身份");
+  state.difficulty = d;
+  goToScreen('map-screen');
+  setTimeout(initMapPositions, 150);
+}
 
 function initMapPositions() {
-    state.nodePositions = [];
-    const container = document.getElementById('map-path-container');
-    const containerRect = container.getBoundingClientRect();
-    for(let i=0; i<=6; i++) {
-        const nodeRect = document.getElementById(`node-${i}`).getBoundingClientRect();
-        state.nodePositions.push(nodeRect.left - containerRect.left + (nodeRect.width / 2) - 25); 
-    }
-    const avatar = document.getElementById('player-avatar');
-    avatar.style.display = 'block'; avatar.style.left = state.nodePositions[0] + "px";
-    updateMapUI();
+  state.nodePositions = [];
+  const container = document.getElementById('map-path-container');
+  const containerRect = container.getBoundingClientRect();
+  for(let i=0; i<=6; i++) {
+    const nodeRect = document.getElementById(`node-${i}`).getBoundingClientRect();
+    state.nodePositions.push(nodeRect.left - containerRect.left + (nodeRect.width / 2) - 25);
+  }
+  const avatar = document.getElementById('player-avatar');
+  avatar.style.display = 'block';
+  avatar.style.left = state.nodePositions[0] + "px";
+  updateMapUI();
 }
 
 function updateMapUI() {
-    for(let i=0; i<=6; i++) {
-        let node = document.getElementById(`node-${i}`);
-        node.className = 'map-node' + (i < state.level ? ' completed' : (i === state.level ? ' active' : ''));
-    }
-    document.getElementById('map-action-btn').innerText = state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最後考驗");
+  for(let i=0; i<=6; i++) {
+    let node = document.getElementById(`node-${i}`);
+    node.className = 'map-node' + (i < state.level ? ' completed' : (i === state.level ? ' active' : ''));
+  }
+  document.getElementById('map-action-btn').innerText =
+    state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最後考驗");
 }
 
 function moveAvatarToLevel(targetLevel) {
-    const avatar = document.getElementById('player-avatar');
-    avatar.style.left = state.nodePositions[targetLevel] + "px";
-    setTimeout(() => { state.level = targetLevel; updateMapUI(); }, 1000);
+  const avatar = document.getElementById('player-avatar');
+  avatar.style.left = state.nodePositions[targetLevel] + "px";
+  setTimeout(() => { state.level = targetLevel; updateMapUI(); }, 1000);
 }
 
-function getRandQFrom(type) { const pool = RAW_QB[type]; return pool[Math.floor(Math.random() * pool.length)]; }
-
 function startCurrentLevel() {
-    if(state.level === 0) { moveAvatarToLevel(1); return; }
-    state.qIdx = 0;
-    let currentModeTypes = [];
-    if(state.difficulty === 'easy') currentModeTypes = ['riddle'];
-    else if(state.difficulty === 'normal') currentModeTypes = ['culture', 'idiom'];
-    else currentModeTypes = ['riddle', 'culture', 'idiom', 'audio'];
+  if(state.level === 0) { moveAvatarToLevel(1); return; }
+  state.qIdx = 0;
+  const types = DIFF_TYPES[state.difficulty];
 
-    if(state.level <= 5) {
-        let t = currentModeTypes[Math.floor(Math.random() * currentModeTypes.length)];
-        let q = getRandQFrom(t);
-        state.questions = [q];
-        state.playedPool.push(q);
-    } else {
-        let finalSet = [];
-        let shuffledPlayed = [...state.playedPool].sort(() => 0.5 - Math.random());
-        finalSet = shuffledPlayed.slice(0, 3);
-        while(finalSet.length < 5) {
-            let t = currentModeTypes[Math.floor(Math.random() * currentModeTypes.length)];
-            let q = getRandQFrom(t);
-            if(!finalSet.includes(q)) finalSet.push(q);
-        }
-        state.questions = finalSet.sort(() => 0.5 - Math.random());
+  if(state.level <= 5) {
+    const t = types[Math.floor(Math.random() * types.length)];
+    const q = getRandQ(t);
+    state.questions = [q];
+    state.playedPool.push(q);
+  } else {
+    // 最終關：從過去答過的題中抽3題 + 補足到5題
+    let finalSet = [];
+    let shuffledPlayed = [...state.playedPool].sort(() => 0.5 - Math.random());
+    finalSet = shuffledPlayed.slice(0, 3);
+    while(finalSet.length < 5) {
+      const t = types[Math.floor(Math.random() * types.length)];
+      const q = getRandQ(t);
+      finalSet.push(q);
     }
-    goToScreen('battle-screen'); renderQuestion();
+    state.questions = finalSet.sort(() => 0.5 - Math.random());
+  }
+  goToScreen('battle-screen');
+  renderQuestion();
 }
 
 function renderQuestion() {
-    let q = state.questions[state.qIdx];
-    document.getElementById('q-text').innerText = q.q;
-    document.getElementById('feedback').innerText = "";
-    document.getElementById('audio-ui').style.display = q.text ? 'block' : 'none';
-    if(q.text) playAudio();
-    let opts = [q.a, ...q.w].sort(() => 0.5 - Math.random());
-    let html = ''; opts.forEach(o => html += `<button class="btn" onclick="answer('${o}')">${o}</button>`);
-    document.getElementById('options-box').innerHTML = html;
-    startTimer();
+  const q = state.questions[state.qIdx];
+  document.getElementById('q-text').innerText = q.question;
+  document.getElementById('q-type-badge').innerText = `【${TYPE_LABELS[q.type] || q.type}】`;
+  document.getElementById('feedback').innerText = "";
+
+  const grid = document.getElementById('options-box');
+  grid.className = 'options-grid ' + (q.isLong ? 'four-opts' : 'short-opts');
+
+  let html = '';
+  q.choices.forEach(o => {
+    // 轉義單引號避免 onclick 字串問題
+    const escaped = o.replace(/'/g, "\\'");
+    html += `<button class="btn" onclick="answer('${escaped}')">${o}</button>`;
+  });
+  grid.innerHTML = html;
+  startTimer();
 }
 
 function answer(pick) {
-    clearInterval(state.timer);
-    let q = state.questions[state.qIdx];
-    let isCorrect = (pick === q.a);
-    if (isCorrect) state.player += Math.round((state.time/15)*1000);
-    else state.wrongCount++; 
-    state.ai += (Math.random() > 0.4 ? Math.floor(Math.random()*300 + 400) : 0);
-    document.getElementById('p-score').innerText = `玩家: ${state.player}`;
-    document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
-    document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.a;
-    document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-green)' : 'red';
-    setTimeout(() => {
-        state.qIdx++;
-        if(state.qIdx < state.questions.length) renderQuestion();
-        else { if(state.level < 6) { goToScreen('map-screen'); setTimeout(() => moveAvatarToLevel(state.level + 1), 600); } else showResult(); }
-    }, 1500);
+  clearInterval(state.timer);
+  const q = state.questions[state.qIdx];
+  const isCorrect = (pick === q.answer);
+
+  if (isCorrect) state.player += Math.round((state.time / 15) * 1000);
+  else state.wrongCount++;
+
+  state.ai += (Math.random() > 0.4 ? Math.floor(Math.random() * 300 + 400) : 0);
+
+  document.getElementById('p-score').innerText = `玩家: ${state.player}`;
+  document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
+  document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.answer;
+  document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-green)' : 'red';
+
+  setTimeout(() => {
+    state.qIdx++;
+    if(state.qIdx < state.questions.length) {
+      renderQuestion();
+    } else {
+      if(state.level < 6) {
+        goToScreen('map-screen');
+        setTimeout(() => moveAvatarToLevel(state.level + 1), 600);
+      } else {
+        showResult();
+      }
+    }
+  }, 1500);
 }
 
-function startTimer() { clearInterval(state.timer); state.time = 15; state.timer = setInterval(() => { state.time -= 0.1; document.getElementById('timer-bar').style.width = (state.time/15*100) + "%"; if(state.time <= 0) answer(null); }, 100); }
-function playAudio() { let q = state.questions[state.qIdx]; if(q.text) { let u = new SpeechSynthesisUtterance(q.text); u.lang = 'zh-TW'; u.rate = 0.8; window.speechSynthesis.speak(u); } }
+function startTimer() {
+  clearInterval(state.timer);
+  state.time = 15;
+  state.timer = setInterval(() => {
+    state.time -= 0.1;
+    document.getElementById('timer-bar').style.width = (state.time / 15 * 100) + "%";
+    if(state.time <= 0) answer(null);
+  }, 100);
+}
 
-function showResult() { 
-    goToScreen('result-screen'); 
-    let isWin = state.player >= state.ai;
-    let isPerfect = state.wrongCount === 0;
-    const flower = document.getElementById('flower-reward');
-    const msg = document.getElementById('result-msg');
-    const report = document.getElementById('score-report');
+function showResult() {
+  goToScreen('result-screen');
+  const isWin = state.player >= state.ai;
+  const isPerfect = state.wrongCount === 0;
+  const flower = document.getElementById('flower-reward');
+  const msg = document.getElementById('result-msg');
+  const motherMsg = document.getElementById('mother-msg');
+  const scoreCorner = document.getElementById('result-score-corner');
 
-    if (isWin && isPerfect) {
-        flower.style.display = 'block';
-        msg.innerText = "完美遠征：粉紅康乃馨解鎖";
-        msg.style.color = "var(--flower-pink)";
-        msg.style.textShadow = "0 0 15px var(--flower-red)";
-        report.innerHTML = `得分：${state.player} / AI：${state.ai}<br><span style="color:white; font-size:22px; font-weight:bold;">這束花，送給最親愛的媽媽！</span>`;
-    } else {
-        flower.style.display = 'none';
-        msg.innerText = isWin ? "遠征成功" : "任務失敗";
-        msg.style.color = isWin ? "var(--neon-green)" : "red";
-        report.innerHTML = `得分：${state.player} / AI：${state.ai}<br>${isWin ? "全答對可獲得粉色康乃馨唷！" : "守護失敗，請重新啟動系統！"}`;
-    }
+  scoreCorner.innerText = `得分：${state.player}　AI：${state.ai}`;
+
+  if (isWin && isPerfect) {
+    flower.style.display = 'block';
+    motherMsg.style.display = 'block';
+    msg.innerText = "完美遠征：粉紅康乃馨解鎖";
+    msg.style.color = "var(--flower-pink)";
+    msg.style.textShadow = "0 0 15px var(--flower-red)";
+  } else {
+    flower.style.display = 'none';
+    motherMsg.style.display = 'none';
+    msg.innerText = isWin ? "遠征成功" : "任務失敗";
+    msg.style.color = isWin ? "var(--neon-green)" : "red";
+    scoreCorner.innerText += isWin ? "\n全答對可獲得粉色康乃馨唷！" : "\n守護失敗，請重新啟動系統！";
+  }
 }
 </script>
 </body>
