@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語遠征：母親節康乃馨特別版</title>
+    <title>末日華語：像素勇者遠征 RPG (母親節特別版)</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,6 +12,7 @@
             --neon-blue: #00ffff;
             --dark-bg: #0a0a0a;
             --node-size: 100px;
+            /* 康乃馨顏色 */
             --flower-red: #ff0033;
             --flower-pink: #ff4d6d;
             --flower-light: #ff85a1;
@@ -81,12 +82,12 @@
             box-shadow: 15px 0px #666, 20px 0px #666, 10px 5px #888, 15px 5px #fff, 20px 5px #888, 25px 5px #888, 10px 10px #666, 15px 10px #666, 20px 10px #666, 25px 10px #666, 15px 15px #edc9af, 20px 15px #edc9af, 10px 20px #3366ff, 15px 20px #3366ff, 20px 20px #3366ff, 25px 20px #3366ff, 5px 25px #3366ff, 10px 25px #fff, 15px 25px #3366ff, 20px 25px #fff, 25px 25px #3366ff, 30px 25px #3366ff, 10px 30px #3366ff, 15px 30px #3366ff, 20px 30px #3366ff, 25px 30px #3366ff, 10px 35px #000, 25px 35px #000;
         }
 
-        /* 康乃馨強化設計 */
+        /* 粉色大康乃馨設計 */
         .pixel-flower {
             width: 4px; height: 4px; background: transparent;
             margin-bottom: 80px;
             box-shadow: 
-                /* 花朵頂部 */
+                /* 花朵頂部 - 粉紅層次 */
                 -4px -12px var(--flower-red), 0 -12px var(--flower-red), 4px -12px var(--flower-red),
                 -8px -8px var(--flower-pink), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-pink),
                 -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-pink), 0 -4px var(--flower-red), 4px -4px var(--flower-pink), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
@@ -127,7 +128,7 @@
 <div id="game-container">
     <div id="start-screen" class="screen active">
         <h1 style="font-size: 40px;">數位華語<br>像素勇者遠征</h1>
-        <p style="color: var(--flower-pink); font-family: 'Press Start 2P'; font-size: 10px;">MOTHER'S DAY SPECIAL</p>
+        <p style="color: var(--flower-pink); font-family: 'Press Start 2P'; font-size: 12px;">MOTHER'S DAY SPECIAL</p>
         <button class="btn" style="font-size: 24px;" onclick="goToScreen('char-select')">開始冒險</button>
     </div>
 
@@ -177,7 +178,7 @@
     <div id="result-screen" class="screen">
         <div class="pixel-flower" id="flower-reward"></div>
         <h1 id="result-msg" style="font-size: 28px; color: var(--neon-green);">任務結束</h1>
-        <div id="score-report" style="margin-bottom:20px; font-size: 18px; line-height: 1.5; color: #ccc;"></div>
+        <div id="score-report" style="margin-bottom:30px; font-size: 18px; line-height: 1.5; color: #ccc;"></div>
         <button class="btn" style="font-size: 18px;" onclick="location.reload()">重新遠征</button>
     </div>
 </div>
@@ -200,20 +201,7 @@ const RAW_QB = {
     ]
 };
 
-let state = { 
-    player: 0, 
-    ai: 0, 
-    level: 0, 
-    difficulty: '', 
-    char: '', 
-    questions: [], 
-    qIdx: 0, 
-    timer: null, 
-    time: 15, 
-    nodePositions: [], 
-    playedPool: [],
-    wrongCount: 0 
-};
+let state = { player: 0, ai: 0, level: 0, difficulty: '', char: '', questions: [], qIdx: 0, timer: null, time: 15, nodePositions: [], playedPool: [], wrongCount: 0 };
 
 function goToScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function selectChar(c) { state.char = c; document.querySelectorAll('.char-card').forEach(card => card.classList.remove('selected')); if(c==='學生') document.getElementById('c1').classList.add('selected'); else if(c==='助教') document.getElementById('c2').classList.add('selected'); else document.getElementById('c3').classList.add('selected'); }
@@ -237,7 +225,7 @@ function updateMapUI() {
         let node = document.getElementById(`node-${i}`);
         node.className = 'map-node' + (i < state.level ? ' completed' : (i === state.level ? ' active' : ''));
     }
-    document.getElementById('map-action-btn').innerText = state.level === 0 ? "開始遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最終協定");
+    document.getElementById('map-action-btn').innerText = state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最終遠征");
 }
 
 function moveAvatarToLevel(targetLevel) {
@@ -251,7 +239,6 @@ function getRandQFrom(type) { const pool = RAW_QB[type]; return pool[Math.floor(
 function startCurrentLevel() {
     if(state.level === 0) { moveAvatarToLevel(1); return; }
     state.qIdx = 0;
-    
     let currentModeTypes = [];
     if(state.difficulty === 'easy') currentModeTypes = ['riddle'];
     else if(state.difficulty === 'normal') currentModeTypes = ['culture', 'idiom'];
@@ -266,7 +253,6 @@ function startCurrentLevel() {
         let finalSet = [];
         let shuffledPlayed = [...state.playedPool].sort(() => 0.5 - Math.random());
         finalSet = shuffledPlayed.slice(0, 3);
-        
         while(finalSet.length < 5) {
             let t = currentModeTypes[Math.floor(Math.random() * currentModeTypes.length)];
             let q = getRandQFrom(t);
@@ -274,7 +260,6 @@ function startCurrentLevel() {
         }
         state.questions = finalSet.sort(() => 0.5 - Math.random());
     }
-    
     goToScreen('battle-screen'); renderQuestion();
 }
 
@@ -294,17 +279,12 @@ function answer(pick) {
     clearInterval(state.timer);
     let q = state.questions[state.qIdx];
     let isCorrect = (pick === q.a);
-    
-    if (isCorrect) {
-        state.player += Math.round((state.time/15)*1000);
-    } else {
-        state.wrongCount++; 
-    }
-
+    if (isCorrect) state.player += Math.round((state.time/15)*1000);
+    else state.wrongCount++; 
     state.ai += (Math.random() > 0.4 ? Math.floor(Math.random()*300 + 400) : 0);
     document.getElementById('p-score').innerText = `玩家: ${state.player}`;
     document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
-    document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.a;
+    document.getElementById('feedback').innerText = isCorrect ? "OK！" : "ERR: " + q.a;
     document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-green)' : 'red';
     setTimeout(() => {
         state.qIdx++;
@@ -320,22 +300,21 @@ function showResult() {
     goToScreen('result-screen'); 
     let isWin = state.player >= state.ai;
     let isPerfect = state.wrongCount === 0;
-    
     const flower = document.getElementById('flower-reward');
     const msg = document.getElementById('result-msg');
     const report = document.getElementById('score-report');
 
     if (isWin && isPerfect) {
         flower.style.display = 'block';
-        msg.innerText = "完美遠征：康乃馨解鎖";
+        msg.innerText = "完美遠征：粉紅康乃馨解鎖";
         msg.style.color = "var(--flower-pink)";
         msg.style.textShadow = "0 0 10px var(--flower-red)";
-        report.innerHTML = `<span style="color:white; font-weight:bold;">這束花，送給最親愛的媽媽！</span>`;
+        report.innerHTML = `得分：${state.player} / AI：${state.ai}<br><span style="color:white; font-size:16px; font-weight:bold;">這束花，送給最親愛的媽媽！</span>`;
     } else {
         flower.style.display = 'none';
-        msg.innerText = isWin ? "遠征成功" : "系統淪陷";
+        msg.innerText = isWin ? "遠征成功" : "任務失敗";
         msg.style.color = isWin ? "var(--neon-green)" : "red";
-        report.innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分<br><br>${isWin ? "還差一點點就能拿到康乃馨囉！" : "再試一次，守護系統並贏得康乃馨吧！"}`;
+        report.innerHTML = `得分：${state.player} / AI：${state.ai}<br>${isWin ? "全答對可獲得粉色康乃馨唷！" : "守護失敗，請重新啟動系統！"}`;
     }
 }
 </script>
