@@ -11,8 +11,7 @@
             --neon-pink: #ff00ff;
             --neon-blue: #00ffff;
             --dark-bg: #0a0a0a;
-            --node-size: 100px;
-            /* 康乃馨顏色 */
+            --node-size: 110px;
             --flower-red: #ff0033;
             --flower-pink: #ff4d6d;
             --flower-light: #ff85a1;
@@ -26,7 +25,6 @@
             display: flex; justify-content: center; align-items: center; height: 100vh;
         }
 
-        /* CRT 效果 */
         body::before {
             content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
@@ -34,69 +32,64 @@
         }
 
         #game-container {
-            width: 95%; max-width: 1000px; height: 750px;
-            border: 5px solid var(--neon-green); position: relative;
-            background: #111; box-shadow: 0 0 30px var(--neon-green);
+            width: 95%; max-width: 1100px; height: 800px;
+            border: 6px solid var(--neon-green); position: relative;
+            background: #111; box-shadow: 0 0 35px var(--neon-green);
             padding: 40px; box-sizing: border-box;
         }
 
         .screen { display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .screen.active { display: flex; }
 
-        h1 { font-family: 'Press Start 2P', cursive; font-size: 24px; text-shadow: 3px 3px var(--neon-pink); margin-bottom: 40px; line-height: 1.5; }
-        h3 { font-size: 28px; color: white; margin-bottom: 20px; }
+        h1 { font-family: 'Press Start 2P', cursive; font-size: 32px; text-shadow: 4px 4px var(--neon-pink); margin-bottom: 50px; line-height: 1.6; }
+        h3 { font-size: 36px; color: white; margin-bottom: 30px; font-weight: bold; }
 
         .btn {
             background: transparent; color: var(--neon-green);
-            border: 3px solid var(--neon-green);
-            padding: 15px 30px; margin: 12px;
-            cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 14px;
+            border: 4px solid var(--neon-green);
+            padding: 20px 40px; margin: 15px;
+            cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 18px;
             transition: 0.3s;
         }
-        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 20px var(--neon-green); }
+        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 25px var(--neon-green); }
 
-        .char-box { display: flex; gap: 20px; margin-bottom: 40px; }
+        .char-box { display: flex; gap: 25px; margin-bottom: 50px; }
         .char-card { 
-            border: 3px solid var(--neon-blue); padding: 20px; cursor: pointer; 
-            width: 180px; transition: 0.3s; font-size: 24px; font-weight: bold;
+            border: 4px solid var(--neon-blue); padding: 25px; cursor: pointer; 
+            width: 220px; transition: 0.3s; font-size: 32px; font-weight: bold;
         }
-        .char-card small { font-size: 16px; color: var(--neon-blue); }
-        .char-card.selected { background: var(--neon-blue); color: black; transform: scale(1.1); }
+        .char-card small { font-size: 20px; color: var(--neon-blue); }
+        .char-card.selected { background: var(--neon-blue); color: black; transform: scale(1.15); }
 
         #map-path-container {
-            width: 95%; height: 220px; position: relative; margin-top: 60px;
+            width: 98%; height: 250px; position: relative; margin-top: 60px;
             display: flex; align-items: flex-end; justify-content: space-between;
         }
-        .path-line-base { position: absolute; bottom: 20px; left: 0; width: 100%; height: 6px; background: #333; z-index: 1; }
+        .path-line-base { position: absolute; bottom: 25px; left: 0; width: 100%; height: 8px; background: #333; z-index: 1; }
         .map-node {
-            width: var(--node-size); height: 50px; border: 4px solid #444; background: #000;
+            width: var(--node-size); height: 60px; border: 4px solid #444; background: #000;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: bold; color: #888; position: relative; z-index: 5;
+            font-size: 18px; font-weight: bold; color: #888; position: relative; z-index: 5;
         }
         .map-node.completed { border-color: var(--neon-green); color: var(--neon-green); }
-        .map-node.active { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); font-size: 16px; }
+        .map-node.active { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 25px var(--neon-blue); font-size: 20px; }
         
-        #player-avatar { width: 40px; height: 40px; position: absolute; bottom: 35px; z-index: 10; transition: left 1s linear; display: none; }
+        #player-avatar { width: 50px; height: 50px; position: absolute; bottom: 45px; z-index: 10; transition: left 1s linear; display: none; }
         .pixel-v2 {
-            position: absolute; width: 5px; height: 5px; background: transparent;
-            box-shadow: 15px 0px #666, 20px 0px #666, 10px 5px #888, 15px 5px #fff, 20px 5px #888, 25px 5px #888, 10px 10px #666, 15px 10px #666, 20px 10px #666, 25px 10px #666, 15px 15px #edc9af, 20px 15px #edc9af, 10px 20px #3366ff, 15px 20px #3366ff, 20px 20px #3366ff, 25px 20px #3366ff, 5px 25px #3366ff, 10px 25px #fff, 15px 25px #3366ff, 20px 25px #fff, 25px 25px #3366ff, 30px 25px #3366ff, 10px 30px #3366ff, 15px 30px #3366ff, 20px 30px #3366ff, 25px 30px #3366ff, 10px 35px #000, 25px 35px #000;
+            position: absolute; width: 6px; height: 6px; background: transparent;
+            box-shadow: 18px 0px #666, 24px 0px #666, 12px 6px #888, 18px 6px #fff, 24px 6px #888, 30px 6px #888, 12px 12px #666, 18px 12px #666, 24px 12px #666, 30px 12px #666, 18px 18px #edc9af, 24px 18px #edc9af, 12px 24px #3366ff, 18px 24px #3366ff, 24px 24px #3366ff, 30px 24px #3366ff, 6px 30px #3366ff, 12px 30px #fff, 18px 30px #3366ff, 24px 30px #fff, 30px 30px #3366ff, 36px 30px #3366ff, 12px 36px #3366ff, 18px 36px #3366ff, 24px 36px #3366ff, 30px 36px #3366ff, 12px 42px #000, 30px 42px #000;
         }
 
-        /* 粉色大康乃馨設計 */
         .pixel-flower {
             width: 4px; height: 4px; background: transparent;
-            margin-bottom: 80px;
+            margin-bottom: 100px;
             box-shadow: 
-                /* 花朵頂部 - 粉紅層次 */
                 -4px -12px var(--flower-red), 0 -12px var(--flower-red), 4px -12px var(--flower-red),
                 -8px -8px var(--flower-pink), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-pink),
                 -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-pink), 0 -4px var(--flower-red), 4px -4px var(--flower-pink), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
                 -8px 0 var(--flower-red), -4px 0 var(--flower-red), 0 0 var(--flower-red), 4px 0 var(--flower-red), 8px 0 var(--flower-red),
-                /* 花萼 */
                 -4px 4px #2d6a4f, 0 4px #40916c, 4px 4px #2d6a4f,
-                /* 莖 */
                 0 8px #1b4332, 0 12px #1b4332, 0 16px #1b4332, 0 20px #1b4332,
-                /* 葉子 */
                 -4px 12px #2d6a4f, -8px 12px #1b4332,
                 4px 16px #2d6a4f, 8px 16px #1b4332;
             transform: scale(6);
@@ -105,41 +98,40 @@
         }
 
         @keyframes flower-glow {
-            0%, 100% { transform: scale(6) translateY(0); filter: drop-shadow(0 0 5px var(--flower-pink)); }
-            50% { transform: scale(6.2) translateY(-10px); filter: drop-shadow(0 0 15px var(--flower-red)); }
+            0%, 100% { transform: scale(6) translateY(0); filter: drop-shadow(0 0 10px var(--flower-pink)); }
+            50% { transform: scale(6.2) translateY(-15px); filter: drop-shadow(0 0 20px var(--flower-red)); }
         }
 
-        #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 30px; }
-        .stat-bar { width: 45%; border: 2px solid var(--neon-pink); padding: 15px; font-size: 20px; font-weight: bold; }
-        #question-display { min-height: 180px; display: flex; align-items: center; justify-content: center; padding: 20px; border: 1px dashed #444; margin-bottom: 20px; }
-        #q-text { font-size: 42px; line-height: 1.4; color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+        #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 40px; }
+        .stat-bar { width: 45%; border: 3px solid var(--neon-pink); padding: 20px; font-size: 26px; font-weight: bold; }
+        #question-display { min-height: 200px; display: flex; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #444; margin-bottom: 30px; }
+        #q-text { font-size: 48px; line-height: 1.5; color: #fff; text-shadow: 0 0 15px var(--neon-blue); font-weight: bold; }
         
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-        .options-grid .btn { font-family: sans-serif; font-size: 28px; font-weight: bold; padding: 20px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; width: 100%; }
+        .options-grid .btn { font-family: sans-serif; font-size: 32px; font-weight: bold; padding: 25px; }
 
-        #timer-container { width: 100%; height: 10px; background: #000; border: 1px solid #444; margin: 15px 0; }
+        #timer-container { width: 100%; height: 15px; background: #000; border: 2px solid #444; margin: 20px 0; }
         #timer-bar { width: 100%; height: 100%; background: var(--neon-green); transition: width 0.1s linear; }
 
-        #feedback { font-size: 24px; margin-top: 20px; height: 30px; font-weight: bold; }
+        #feedback { font-size: 32px; margin-top: 25px; height: 40px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="game-container">
     <div id="start-screen" class="screen active">
-        <h1 style="font-size: 40px;">數位華語<br>像素勇者遠征</h1>
-        <p style="color: var(--flower-pink); font-family: 'Press Start 2P'; font-size: 12px;">MOTHER'S DAY SPECIAL</p>
-        <button class="btn" style="font-size: 24px;" onclick="goToScreen('char-select')">開始冒險</button>
+        <h1 style="font-size: 50px;">數位華語<br>像素勇者遠征</h1>
+        <p style="color: var(--flower-pink); font-family: 'Press Start 2P'; font-size: 18px;">MOTHER'S DAY SPECIAL</p>
+        <button class="btn" style="font-size: 30px; margin-top: 30px;" onclick="goToScreen('char-select')">開始冒險</button>
     </div>
 
     <div id="char-select" class="screen">
-        <h3>選擇你的數位身份</h3>
+        <h3>選擇你的身份</h3>
         <div class="char-box">
             <div class="char-card" id="c1" onclick="selectChar('學生')">學生<br><small>智力+10</small></div>
             <div class="char-card" id="c2" onclick="selectChar('助教')">助教<br><small>技術+30</small></div>
             <div class="char-card" id="c3" onclick="selectChar('老師')">老師<br><small>經驗+50</small></div>
         </div>
-        <h3>選擇挑戰難度</h3>
         <div style="display:flex">
             <button class="btn" onclick="setDiff('easy')">簡單《字謎》</button>
             <button class="btn" onclick="setDiff('normal')">普通《文化/成語》</button>
@@ -148,7 +140,7 @@
     </div>
 
     <div id="map-screen" class="screen">
-        <h1>勇者前進路徑</h1>
+        <h3>勇者前進路徑</h3>
         <div id="map-path-container">
             <div class="path-line-base"></div>
             <div id="player-avatar"><div class="pixel-v2"></div></div>
@@ -160,7 +152,7 @@
             <div class="map-node" id="node-5">關卡 5</div>
             <div class="map-node" id="node-6">最終考驗</div>
         </div>
-        <button class="btn" id="map-action-btn" style="margin-top: 60px; font-size: 20px;" onclick="startCurrentLevel()">進入關卡</button>
+        <button class="btn" id="map-action-btn" style="margin-top: 60px; font-size: 24px;" onclick="startCurrentLevel()">進入關卡</button>
     </div>
 
     <div id="battle-screen" class="screen">
@@ -170,20 +162,21 @@
         </div>
         <div id="timer-container"><div id="timer-bar"></div></div>
         <div id="question-display"><h2 id="q-text">傳輸中...</h2></div>
-        <div id="audio-ui" style="display:none; margin-bottom: 10px;"><button class="btn" onclick="playAudio()">🔊 點我聽題目</button></div>
+        <div id="audio-ui" style="display:none; margin-bottom: 15px;"><button class="btn" style="padding: 10px 25px; font-size: 14px;" onclick="playAudio()">🔊 監聽題目</button></div>
         <div class="options-grid" id="options-box"></div>
         <p id="feedback"></p>
     </div>
 
     <div id="result-screen" class="screen">
         <div class="pixel-flower" id="flower-reward"></div>
-        <h1 id="result-msg" style="font-size: 28px; color: var(--neon-green);">任務結束</h1>
-        <div id="score-report" style="margin-bottom:30px; font-size: 18px; line-height: 1.5; color: #ccc;"></div>
-        <button class="btn" style="font-size: 18px;" onclick="location.reload()">重新遠征</button>
+        <h1 id="result-msg" style="font-size: 40px; color: var(--neon-green);">任務結束</h1>
+        <div id="score-report" style="margin-bottom:30px; font-size: 24px; line-height: 1.8; color: #ccc;"></div>
+        <button class="btn" style="font-size: 24px;" onclick="location.reload()">重新遠征</button>
     </div>
 </div>
 
 <script>
+// RAW_QB 題庫維持完整 80 題
 const RAW_QB = {
     riddle: [
         {q:"一人一張口。",a:"合",w:["含","答","口"]}, {q:"兩人在內。",a:"肉",w:["內","囚","網"]}, {q:"哪個漢字要寫最久？",a:"朋",w:["友","好","鵬"]}, {q:"一心向上。",a:"必",w:["忘","忌","心"]}, {q:"一隻狗有四張口。",a:"器",w:["哮","嚎","囂"]}, {q:"一隻黑狗，不叫不吼。",a:"默",w:["黑","靜","暗"]}, {q:"太陽的兒子。",a:"星",w:["旦","晨","昇"]}, {q:"手提包。",a:"抱",w:["提","握","包"]}, {q:"半真半假。",a:"值",w:["真","假","信"]}, {q:"七十二小時。",a:"晶",w:["品","昌","明"]}, {q:"大雨落在橫山上。",a:"雪",w:["雨","霜","霧"]}, {q:"夫人何處去。",a:"二",w:["夫","去","大"]}, {q:"山下之風。",a:"嵐",w:["風","嶺","峰"]}, {q:"守門員。",a:"閃",w:["門","閉","開"]}, {q:"自大加一點。",a:"臭",w:["自","大","太"]}, {q:"自有一人在口中。",a:"囚",w:["困","囝","囤"]}, {q:"我沒有他有，天沒有地有。",a:"也",w:["地","他","她"]}, {q:"兩點水。",a:"冰",w:["水","冷","凍"]}, {q:"皇帝的新衣。",a:"襲",w:["衣","裸","服"]}, {q:"太陽打西邊出來。",a:"晒",w:["曬","晾","晃"]}, {q:"竹下有寺。",a:"等",w:["寺","竹","待"]}, {q:"雲上出太陽。",a:"曇",w:["雲","晴","陰"]}, {q:"雷而無雨。",a:"田",w:["電","雷","雨"]}, {q:"遠看像頭牛，近看沒有頭。",a:"午",w:["牛","年","牟"]}, {q:"說話聲太大。",a:"誇",w:["大","說","話"]}, {q:"大口帶小口。",a:"回",w:["口","囗","囘"]}, {q:"多一半。",a:"夕",w:["多","半","大"]}, {q:"此字不難猜，孔子隔壁栽。",a:"子",w:["孔","鄰","李"]}, {q:"太陽西邊下，月亮東邊掛。",a:"明",w:["日","月","朗"]}, {q:"不上不下。",a:"卡",w:["上","下","中"]}, {q:"山上還有山。",a:"出",w:["山","峰","嶺"]}, {q:"半部春秋。",a:"秦",w:["春","秋","半"]}, {q:"鏡中人。",a:"入",w:["人","反","鏡"]}, {q:"真心相伴。",a:"慎",w:["真","心","忍"]}, {q:"早不說，晚不說。",a:"許",w:["早","晚","話"]}, {q:"一月七日。",a:"脂",w:["月","日","肪"]}, {q:"一邊紅，一邊綠，一邊怕雨，一邊怕風。",a:"秋",w:["春","夏","冬"]}, {q:"人不在其位。",a:"立",w:["位","人","在"]}, {q:"人在草木間。",a:"茶",w:["草","木","藏"]}, {q:"日復一日。",a:"昌",w:["日","旦","旭"]}, {q:"頂破天。",a:"夫",w:["天","大","丈"]}, {q:"此木為啥？",a:"柴",w:["木","此","材"]}, {q:"一大二小。",a:"奈",w:["大","小","奇"]}, {q:"太陽出現在地平線上。",a:"旦",w:["日","旭","昇"]}, {q:"半個月亮。",a:"胖",w:["月","肉","半"]}, {q:"十一個人。",a:"仕",w:["十","人","什"]}, {q:"一字十一口。",a:"吉",w:["一","十","古"]}, {q:"誰是傻瓜？",a:"保",w:["愚","笨","呆"]}, {q:"千里姻緣一線牽。",a:"重",w:["千","里","線"]}, {q:"請勿入口。",a:"囫",w:["入","口","圈"]}
@@ -192,7 +185,7 @@ const RAW_QB = {
         {q:"下列何者是宋代以後主要的私學機構？",a:"書院",w:["精舍","國子監","太學"]}, {q:"哪句成語顯示服飾具有區隔夷夏的作用？",a:"被髮左衽",w:["布衣卿相","衣冠禽獸","沐猴而冠"]}, {q:"關於「清明上河圖」，下列何者正確？",a:"顯示城市的物質進步",w:["完成於明朝","以首都北京為題材","突顯文人清談之風"]}, {q:"下列何者不是孔學的影響？",a:"官學從此消失",w:["百家相繼興起","促進階級流動","開創師生共學團體"]}, {q:"職業戲班俗稱？",a:"梨園",w:["崑園","京園","旗園"]}, {q:"北京故宮「紫禁城」名稱由來？",a:"紫微星正處中天",w:["紫色比朱紅重大","黃袍搭配合宜","萬紫千紅喜氣"]}, {q:"「穿針乞巧」與哪個節日有關？",a:"七夕節",w:["上元節","元宵節","端午節"]}, {q:"過年時吃水餃，象徵什麼？",a:"財富",w:["健康","團圓","平安"]}, {q:"「菩提本無樹，明鏡亦非台」是哪個宗派？",a:"禪宗",w:["密宗","天台宗","華嚴宗"]}, {q:"《本草綱目》的作者是誰？",a:"李時珍",w:["孫思邈","華佗","扁鵲"]}, {q:"台灣著名的「五月雪」是哪種花？",a:"油桐花",w:["桂花","鳳凰花","玉蘭花"]}
     ],
     idiom: [
-        {q:"「胸有成竹」現用來比喻什麼？",a:"很有把握",w:["為人正直","孤芳自賞","內心空虛"]}, {q:"哪成語形容「文章極好，非常有價值」？",a:"洛陽紙貴",w:["韋編三絕","汗牛充棟","買櫝還珠"]}, {q:"「不恥下問」的意思是？",a:"不以向低者請教為恥",w:["羞於向低位者請教","不向無學問者提問","常問愚蠢問題"]}, {q:"「破釜沉舟」與哪位歷史人物有關？",a:"項羽",w:["劉邦","開創師生共學","諸葛亮"]}, {q:"「望洋興嘆」現多比喻什麼？",a:"做事力不從心",w:["欣賞美景","登高望遠","哀悼逝者"]}, {q:"「目不識丁」形容一個人？",a:"認識字",w:["視力不好","專注工作","傲慢無禮"]}, {q:"「狐假虎威」狐狸藉老虎什麼嚇走百獸？",a:"威風",w:["聲音","氣味","速度"]}, {q:"「邯鄲學步」告訴我們？",a:"模仿別人反丟了本領",w:["學習要刻苦","走路姿勢重要","活到老學到老"]}, {q:"「脫穎而出」現用來形容？",a:"顯露才幹",w:["擺脫困境","發生意外","穿衣風格"]}, {q:"「世外桃源」出自哪位作家？",a:"陶淵明",w:["蘇軾","王維","李白"]}, {q:"「再接再___」正確的字？",a:"厲",w:["勵","力","歷"]}, {q:"「一鼓作____」正確的字？",a:"氣",w:["汽","器","棄"]}
+        {q:"「胸有成竹」現用來比喻什麼？",a:"很有把握",w:["為人正直","孤芳自賞","內心空虛"]}, {q:"哪成語形容「文章極好，非常有價值」？",a:"洛陽紙貴",w:["韋編三絕","汗牛充棟","買櫝還珠"]}, {q:"「不恥下問」的意思是？",a:"不以向低者請教為恥",w:["羞於向低位者請教","不向無學問者提問","常問愚蠢問題"]}, {q:"「破釜沉舟」與哪位歷史人物有關？",a:"項羽",w:["劉邦","韓信","諸葛亮"]}, {q:"「望洋興嘆」現多比喻什麼？",a:"做事力不從心",w:["欣賞美景","登高望遠","哀悼逝者"]}, {q:"「目不識丁」形容一個人？",a:"認識字",w:["視力不好","專注工作","傲慢無禮"]}, {q:"「狐假虎威」狐狸藉老虎什麼嚇走百獸？",a:"威風",w:["聲音","氣味","速度"]}, {q:"「邯鄲學步」告訴我們？",a:"模仿別人反丟了本領",w:["學習要刻苦","走路姿勢重要","活到老學到老"]}, {q:"「脫穎而出」現用來形容？",a:"顯露才幹",w:["擺脫困境","發生意外","穿衣風格"]}, {q:"「世外桃源」出自哪位作家？",a:"陶淵明",w:["蘇軾","王維","李白"]}, {q:"「再接再___」正確的字？",a:"厲",w:["勵","力","歷"]}, {q:"「一鼓作____」正確的字？",a:"氣",w:["汽","器","棄"]}
     ],
     audio: [
         {q:"聽音選出『小米酒』正確變調：", a:"ㄒㄧㄠˇ ㄇㄧˊ ㄐㄧㄡˇ", w:["ㄒㄧㄠˇ ㄇㄧˇ ㄐㄧㄡˇ", "ㄒㄧㄠˊ ㄇㄧˊ ㄐㄧㄡˇ"], text:"小米酒"},
@@ -213,7 +206,7 @@ function initMapPositions() {
     const containerRect = container.getBoundingClientRect();
     for(let i=0; i<=6; i++) {
         const nodeRect = document.getElementById(`node-${i}`).getBoundingClientRect();
-        state.nodePositions.push(nodeRect.left - containerRect.left + (nodeRect.width / 2) - 20); 
+        state.nodePositions.push(nodeRect.left - containerRect.left + (nodeRect.width / 2) - 25); 
     }
     const avatar = document.getElementById('player-avatar');
     avatar.style.display = 'block'; avatar.style.left = state.nodePositions[0] + "px";
@@ -225,7 +218,7 @@ function updateMapUI() {
         let node = document.getElementById(`node-${i}`);
         node.className = 'map-node' + (i < state.level ? ' completed' : (i === state.level ? ' active' : ''));
     }
-    document.getElementById('map-action-btn').innerText = state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最終遠征");
+    document.getElementById('map-action-btn').innerText = state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最後考驗");
 }
 
 function moveAvatarToLevel(targetLevel) {
@@ -284,7 +277,7 @@ function answer(pick) {
     state.ai += (Math.random() > 0.4 ? Math.floor(Math.random()*300 + 400) : 0);
     document.getElementById('p-score').innerText = `玩家: ${state.player}`;
     document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
-    document.getElementById('feedback').innerText = isCorrect ? "OK！" : "ERR: " + q.a;
+    document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.a;
     document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-green)' : 'red';
     setTimeout(() => {
         state.qIdx++;
@@ -308,8 +301,8 @@ function showResult() {
         flower.style.display = 'block';
         msg.innerText = "完美遠征：粉紅康乃馨解鎖";
         msg.style.color = "var(--flower-pink)";
-        msg.style.textShadow = "0 0 10px var(--flower-red)";
-        report.innerHTML = `得分：${state.player} / AI：${state.ai}<br><span style="color:white; font-size:16px; font-weight:bold;">這束花，送給最親愛的媽媽！</span>`;
+        msg.style.textShadow = "0 0 15px var(--flower-red)";
+        report.innerHTML = `得分：${state.player} / AI：${state.ai}<br><span style="color:white; font-size:22px; font-weight:bold;">這束花，送給最親愛的媽媽！</span>`;
     } else {
         flower.style.display = 'none';
         msg.innerText = isWin ? "遠征成功" : "任務失敗";
