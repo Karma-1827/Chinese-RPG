@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>末日華語：母親節特別遠征版</title>
+    <title>華語遠征：母親節康乃馨特別版</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,7 +12,9 @@
             --neon-blue: #00ffff;
             --dark-bg: #0a0a0a;
             --node-size: 100px;
+            --flower-red: #ff0033;
             --flower-pink: #ff4d6d;
+            --flower-light: #ff85a1;
         }
 
         body {
@@ -79,26 +81,31 @@
             box-shadow: 15px 0px #666, 20px 0px #666, 10px 5px #888, 15px 5px #fff, 20px 5px #888, 25px 5px #888, 10px 10px #666, 15px 10px #666, 20px 10px #666, 25px 10px #666, 15px 15px #edc9af, 20px 15px #edc9af, 10px 20px #3366ff, 15px 20px #3366ff, 20px 20px #3366ff, 25px 20px #3366ff, 5px 25px #3366ff, 10px 25px #fff, 15px 25px #3366ff, 20px 25px #fff, 25px 25px #3366ff, 30px 25px #3366ff, 10px 30px #3366ff, 15px 30px #3366ff, 20px 30px #3366ff, 25px 30px #3366ff, 10px 35px #000, 25px 35px #000;
         }
 
-        /* 康乃馨像素繪製 */
+        /* 康乃馨強化設計 */
         .pixel-flower {
-            width: 5px; height: 5px; background: transparent;
-            margin-bottom: 50px;
+            width: 4px; height: 4px; background: transparent;
+            margin-bottom: 80px;
             box-shadow: 
-                /* 花瓣 */
-                0 -10px var(--flower-pink), -5px -10px var(--flower-pink), 5px -10px var(--flower-pink),
-                0 -5px var(--flower-pink), -5px -5px var(--flower-pink), 5px -5px var(--flower-pink),
-                -10px -5px var(--flower-pink), 10px -5px var(--flower-pink),
-                /* 莖與葉 */
-                0 0 #2d6a4f, 0 5px #2d6a4f, 0 10px #2d6a4f,
-                -5px 5px #2d6a4f, 5px 10px #2d6a4f;
-            transform: scale(4);
-            animation: flower-float 2s infinite ease-in-out;
+                /* 花朵頂部 */
+                -4px -12px var(--flower-red), 0 -12px var(--flower-red), 4px -12px var(--flower-red),
+                -8px -8px var(--flower-pink), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-pink),
+                -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-pink), 0 -4px var(--flower-red), 4px -4px var(--flower-pink), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
+                -8px 0 var(--flower-red), -4px 0 var(--flower-red), 0 0 var(--flower-red), 4px 0 var(--flower-red), 8px 0 var(--flower-red),
+                /* 花萼 */
+                -4px 4px #2d6a4f, 0 4px #40916c, 4px 4px #2d6a4f,
+                /* 莖 */
+                0 8px #1b4332, 0 12px #1b4332, 0 16px #1b4332, 0 20px #1b4332,
+                /* 葉子 */
+                -4px 12px #2d6a4f, -8px 12px #1b4332,
+                4px 16px #2d6a4f, 8px 16px #1b4332;
+            transform: scale(6);
+            animation: flower-glow 2s infinite ease-in-out;
             display: none;
         }
 
-        @keyframes flower-float {
-            0%, 100% { transform: scale(4) translateY(0); }
-            50% { transform: scale(4) translateY(-10px); }
+        @keyframes flower-glow {
+            0%, 100% { transform: scale(6) translateY(0); filter: drop-shadow(0 0 5px var(--flower-pink)); }
+            50% { transform: scale(6.2) translateY(-10px); filter: drop-shadow(0 0 15px var(--flower-red)); }
         }
 
         #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 30px; }
@@ -169,9 +176,9 @@
 
     <div id="result-screen" class="screen">
         <div class="pixel-flower" id="flower-reward"></div>
-        <h1 id="result-msg" style="font-size: 36px; color: var(--neon-green);">任務結束</h1>
-        <div id="score-report" style="margin-bottom:40px; font-size: 28px; line-height: 2;"></div>
-        <button class="btn" style="font-size: 24px;" onclick="location.reload()">重新遠征</button>
+        <h1 id="result-msg" style="font-size: 28px; color: var(--neon-green);">任務結束</h1>
+        <div id="score-report" style="margin-bottom:20px; font-size: 18px; line-height: 1.5; color: #ccc;"></div>
+        <button class="btn" style="font-size: 18px;" onclick="location.reload()">重新遠征</button>
     </div>
 </div>
 
@@ -184,7 +191,7 @@ const RAW_QB = {
         {q:"下列何者是宋代以後主要的私學機構？",a:"書院",w:["精舍","國子監","太學"]}, {q:"哪句成語顯示服飾具有區隔夷夏的作用？",a:"被髮左衽",w:["布衣卿相","衣冠禽獸","沐猴而冠"]}, {q:"關於「清明上河圖」，下列何者正確？",a:"顯示城市的物質進步",w:["完成於明朝","以首都北京為題材","突顯文人清談之風"]}, {q:"下列何者不是孔學的影響？",a:"官學從此消失",w:["百家相繼興起","促進階級流動","開創師生共學團體"]}, {q:"職業戲班俗稱？",a:"梨園",w:["崑園","京園","旗園"]}, {q:"北京故宮「紫禁城」名稱由來？",a:"紫微星正處中天",w:["紫色比朱紅重大","黃袍搭配合宜","萬紫千紅喜氣"]}, {q:"「穿針乞巧」與哪個節日有關？",a:"七夕節",w:["上元節","元宵節","端午節"]}, {q:"過年時吃水餃，象徵什麼？",a:"財富",w:["健康","團圓","平安"]}, {q:"「菩提本無樹，明鏡亦非台」是哪個宗派？",a:"禪宗",w:["密宗","天台宗","華嚴宗"]}, {q:"《本草綱目》的作者是誰？",a:"李時珍",w:["孫思邈","華佗","扁鵲"]}, {q:"台灣著名的「五月雪」是哪種花？",a:"油桐花",w:["桂花","鳳凰花","玉蘭花"]}
     ],
     idiom: [
-        {q:"「胸有成竹」現用來比喻什麼？",a:"很有把握",w:["為人正直","孤芳自賞","內心空虛"]}, {q:"哪成語形容「文章極好，非常有價值」？",a:"洛陽紙貴",w:["韋編三絕","汗牛充棟","買櫝還珠"]}, {q:"「不恥下問」的意思是？",a:"不以向低者請教為恥",w:["羞於向低位者請教","不向無學問者提問","常問愚蠢問題"]}, {q:"「破釜沉舟」與哪位歷史人物有關？",a:"項羽",w:["劉邦","韓信","諸葛亮"]}, {q:"「望洋興嘆」現多比喻什麼？",a:"做事力不從心",w:["欣賞美景","登高望遠","哀悼逝者"]}, {q:"「目不識丁」形容一個人？",a:"認識字",w:["視力不好","專注工作","傲慢無禮"]}, {q:"「狐假虎威」狐狸藉老虎什麼嚇走百獸？",a:"威風",w:["聲音","氣味","速度"]}, {q:"「邯鄲學步」告訴我們？",a:"模仿別人反丟了本領",w:["學習要刻苦","走路姿勢重要","活到老學到老"]}, {q:"「脫穎而出」現用來形容？",a:"顯露才幹",w:["擺脫困境","發生意外","穿衣風格"]}, {q:"「世外桃源」出自哪位作家？",a:"陶淵明",w:["蘇軾","王維","李白"]}, {q:"「再接再___」正確的字？",a:"厲",w:["勵","力","歷"]}, {q:"「一鼓作____」正確的字？",a:"氣",w:["汽","器","棄"]}
+        {q:"「胸有成竹」現用來比喻什麼？",a:"很有把握",w:["為人正直","孤芳自賞","內心空虛"]}, {q:"哪成語形容「文章極好，非常有價值」？",a:"洛陽紙貴",w:["韋編三絕","汗牛充棟","買櫝還珠"]}, {q:"「不恥下問」的意思是？",a:"不以向低者請教為恥",w:["羞於向低位者請教","不向無學問者提問","常問愚蠢問題"]}, {q:"「破釜沉舟」與哪位歷史人物有關？",a:"項羽",w:["劉邦","開創師生共學","諸葛亮"]}, {q:"「望洋興嘆」現多比喻什麼？",a:"做事力不從心",w:["欣賞美景","登高望遠","哀悼逝者"]}, {q:"「目不識丁」形容一個人？",a:"認識字",w:["視力不好","專注工作","傲慢無禮"]}, {q:"「狐假虎威」狐狸藉老虎什麼嚇走百獸？",a:"威風",w:["聲音","氣味","速度"]}, {q:"「邯鄲學步」告訴我們？",a:"模仿別人反丟了本領",w:["學習要刻苦","走路姿勢重要","活到老學到老"]}, {q:"「脫穎而出」現用來形容？",a:"顯露才幹",w:["擺脫困境","發生意外","穿衣風格"]}, {q:"「世外桃源」出自哪位作家？",a:"陶淵明",w:["蘇軾","王維","李白"]}, {q:"「再接再___」正確的字？",a:"厲",w:["勵","力","歷"]}, {q:"「一鼓作____」正確的字？",a:"氣",w:["汽","器","棄"]}
     ],
     audio: [
         {q:"聽音選出『小米酒』正確變調：", a:"ㄒㄧㄠˇ ㄇㄧˊ ㄐㄧㄡˇ", w:["ㄒㄧㄠˇ ㄇㄧˇ ㄐㄧㄡˇ", "ㄒㄧㄠˊ ㄇㄧˊ ㄐㄧㄡˇ"], text:"小米酒"},
@@ -205,7 +212,7 @@ let state = {
     time: 15, 
     nodePositions: [], 
     playedPool: [],
-    wrongCount: 0 // 新增：統計錯誤題數
+    wrongCount: 0 
 };
 
 function goToScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
@@ -291,7 +298,7 @@ function answer(pick) {
     if (isCorrect) {
         state.player += Math.round((state.time/15)*1000);
     } else {
-        state.wrongCount++; // 答錯計數
+        state.wrongCount++; 
     }
 
     state.ai += (Math.random() > 0.4 ? Math.floor(Math.random()*300 + 400) : 0);
@@ -322,17 +329,13 @@ function showResult() {
         flower.style.display = 'block';
         msg.innerText = "完美遠征：康乃馨解鎖";
         msg.style.color = "var(--flower-pink)";
-        report.innerHTML = `玩家：${state.player} 分 (全答對！)<br> AI：${state.ai} 分<br><br><span style="font-size:20px; color:white;">祝全天下的媽媽母親節快樂！</span>`;
-    } else if (isWin) {
-        flower.style.display = 'none';
-        msg.innerText = "勝利：守護成功";
-        msg.style.color = "var(--neon-green)";
-        report.innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分<br><br><span style="font-size:16px;">(若全答對可解鎖康乃馨唷！)</span>`;
+        msg.style.textShadow = "0 0 10px var(--flower-red)";
+        report.innerHTML = `玩家：${state.player} 分 (100% 正確率)<br> AI：${state.ai} 分<br><br><span style="color:white; font-weight:bold;">這束花，送給最親愛的媽媽！</span>`;
     } else {
         flower.style.display = 'none';
-        msg.innerText = "失敗：系統淪陷";
-        msg.style.color = "red";
-        report.innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分`;
+        msg.innerText = isWin ? "遠征成功" : "系統淪陷";
+        msg.style.color = isWin ? "var(--neon-green)" : "red";
+        report.innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分<br><br>${isWin ? "還差一點點就能拿到康乃馨囉！" : "再試一次，守護系統並贏得康乃馨吧！"}`;
     }
 }
 </script>
