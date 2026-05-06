@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>末日華語：像素勇者遠征 RPG (修正版)</title>
+    <title>末日華語：母親節特別遠征版</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,6 +12,7 @@
             --neon-blue: #00ffff;
             --dark-bg: #0a0a0a;
             --node-size: 100px;
+            --flower-pink: #ff4d6d;
         }
 
         body {
@@ -78,6 +79,28 @@
             box-shadow: 15px 0px #666, 20px 0px #666, 10px 5px #888, 15px 5px #fff, 20px 5px #888, 25px 5px #888, 10px 10px #666, 15px 10px #666, 20px 10px #666, 25px 10px #666, 15px 15px #edc9af, 20px 15px #edc9af, 10px 20px #3366ff, 15px 20px #3366ff, 20px 20px #3366ff, 25px 20px #3366ff, 5px 25px #3366ff, 10px 25px #fff, 15px 25px #3366ff, 20px 25px #fff, 25px 25px #3366ff, 30px 25px #3366ff, 10px 30px #3366ff, 15px 30px #3366ff, 20px 30px #3366ff, 25px 30px #3366ff, 10px 35px #000, 25px 35px #000;
         }
 
+        /* 康乃馨像素繪製 */
+        .pixel-flower {
+            width: 5px; height: 5px; background: transparent;
+            margin-bottom: 50px;
+            box-shadow: 
+                /* 花瓣 */
+                0 -10px var(--flower-pink), -5px -10px var(--flower-pink), 5px -10px var(--flower-pink),
+                0 -5px var(--flower-pink), -5px -5px var(--flower-pink), 5px -5px var(--flower-pink),
+                -10px -5px var(--flower-pink), 10px -5px var(--flower-pink),
+                /* 莖與葉 */
+                0 0 #2d6a4f, 0 5px #2d6a4f, 0 10px #2d6a4f,
+                -5px 5px #2d6a4f, 5px 10px #2d6a4f;
+            transform: scale(4);
+            animation: flower-float 2s infinite ease-in-out;
+            display: none;
+        }
+
+        @keyframes flower-float {
+            0%, 100% { transform: scale(4) translateY(0); }
+            50% { transform: scale(4) translateY(-10px); }
+        }
+
         #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 30px; }
         .stat-bar { width: 45%; border: 2px solid var(--neon-pink); padding: 15px; font-size: 20px; font-weight: bold; }
         #question-display { min-height: 180px; display: flex; align-items: center; justify-content: center; padding: 20px; border: 1px dashed #444; margin-bottom: 20px; }
@@ -97,6 +120,7 @@
 <div id="game-container">
     <div id="start-screen" class="screen active">
         <h1 style="font-size: 40px;">數位華語<br>像素勇者遠征</h1>
+        <p style="color: var(--flower-pink); font-family: 'Press Start 2P'; font-size: 10px;">MOTHER'S DAY SPECIAL</p>
         <button class="btn" style="font-size: 24px;" onclick="goToScreen('char-select')">開始冒險</button>
     </div>
 
@@ -144,6 +168,7 @@
     </div>
 
     <div id="result-screen" class="screen">
+        <div class="pixel-flower" id="flower-reward"></div>
         <h1 id="result-msg" style="font-size: 36px; color: var(--neon-green);">任務結束</h1>
         <div id="score-report" style="margin-bottom:40px; font-size: 28px; line-height: 2;"></div>
         <button class="btn" style="font-size: 24px;" onclick="location.reload()">重新遠征</button>
@@ -168,7 +193,20 @@ const RAW_QB = {
     ]
 };
 
-let state = { player: 0, ai: 0, level: 0, difficulty: '', char: '', questions: [], qIdx: 0, timer: null, time: 15, nodePositions: [], playedPool: [] };
+let state = { 
+    player: 0, 
+    ai: 0, 
+    level: 0, 
+    difficulty: '', 
+    char: '', 
+    questions: [], 
+    qIdx: 0, 
+    timer: null, 
+    time: 15, 
+    nodePositions: [], 
+    playedPool: [],
+    wrongCount: 0 // 新增：統計錯誤題數
+};
 
 function goToScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 function selectChar(c) { state.char = c; document.querySelectorAll('.char-card').forEach(card => card.classList.remove('selected')); if(c==='學生') document.getElementById('c1').classList.add('selected'); else if(c==='助教') document.getElementById('c2').classList.add('selected'); else document.getElementById('c3').classList.add('selected'); }
@@ -207,20 +245,17 @@ function startCurrentLevel() {
     if(state.level === 0) { moveAvatarToLevel(1); return; }
     state.qIdx = 0;
     
-    // 獲取當前模式題庫範圍
     let currentModeTypes = [];
     if(state.difficulty === 'easy') currentModeTypes = ['riddle'];
     else if(state.difficulty === 'normal') currentModeTypes = ['culture', 'idiom'];
     else currentModeTypes = ['riddle', 'culture', 'idiom', 'audio'];
 
     if(state.level <= 5) {
-        // 普通關卡：抽1題
         let t = currentModeTypes[Math.floor(Math.random() * currentModeTypes.length)];
         let q = getRandQFrom(t);
         state.questions = [q];
         state.playedPool.push(q);
     } else {
-        // 最終關卡：5題 (3題回顧 + 2題新題)
         let finalSet = [];
         let shuffledPlayed = [...state.playedPool].sort(() => 0.5 - Math.random());
         finalSet = shuffledPlayed.slice(0, 3);
@@ -252,7 +287,13 @@ function answer(pick) {
     clearInterval(state.timer);
     let q = state.questions[state.qIdx];
     let isCorrect = (pick === q.a);
-    state.player += isCorrect ? Math.round((state.time/15)*1000) : 0;
+    
+    if (isCorrect) {
+        state.player += Math.round((state.time/15)*1000);
+    } else {
+        state.wrongCount++; // 答錯計數
+    }
+
     state.ai += (Math.random() > 0.4 ? Math.floor(Math.random()*300 + 400) : 0);
     document.getElementById('p-score').innerText = `玩家: ${state.player}`;
     document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
@@ -267,7 +308,33 @@ function answer(pick) {
 
 function startTimer() { clearInterval(state.timer); state.time = 15; state.timer = setInterval(() => { state.time -= 0.1; document.getElementById('timer-bar').style.width = (state.time/15*100) + "%"; if(state.time <= 0) answer(null); }, 100); }
 function playAudio() { let q = state.questions[state.qIdx]; if(q.text) { let u = new SpeechSynthesisUtterance(q.text); u.lang = 'zh-TW'; u.rate = 0.8; window.speechSynthesis.speak(u); } }
-function showResult() { goToScreen('result-screen'); let win = state.player >= state.ai; document.getElementById('result-msg').innerText = win ? "勝利：守護成功" : "失敗：系統淪陷"; document.getElementById('score-report').innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分`; }
+
+function showResult() { 
+    goToScreen('result-screen'); 
+    let isWin = state.player >= state.ai;
+    let isPerfect = state.wrongCount === 0;
+    
+    const flower = document.getElementById('flower-reward');
+    const msg = document.getElementById('result-msg');
+    const report = document.getElementById('score-report');
+
+    if (isWin && isPerfect) {
+        flower.style.display = 'block';
+        msg.innerText = "完美遠征：康乃馨解鎖";
+        msg.style.color = "var(--flower-pink)";
+        report.innerHTML = `玩家：${state.player} 分 (全答對！)<br> AI：${state.ai} 分<br><br><span style="font-size:20px; color:white;">祝全天下的媽媽母親節快樂！</span>`;
+    } else if (isWin) {
+        flower.style.display = 'none';
+        msg.innerText = "勝利：守護成功";
+        msg.style.color = "var(--neon-green)";
+        report.innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分<br><br><span style="font-size:16px;">(若全答對可解鎖康乃馨唷！)</span>`;
+    } else {
+        flower.style.display = 'none';
+        msg.innerText = "失敗：系統淪陷";
+        msg.style.color = "red";
+        report.innerHTML = `玩家：${state.player} 分<br> AI：${state.ai} 分`;
+    }
+}
 </script>
 </body>
 </html>
