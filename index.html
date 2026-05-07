@@ -7,10 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #00ffff;
-            --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --dark-bg: #0a0a0a;
+            --neon-blue: #ff9500;
+            --neon-pink: #ffcc00;
+            --dark-bg: #0f0800;
             --node-size: 110px;
             --flower-red: #ff0033;
             --flower-pink: #ff4d6d;
@@ -33,19 +32,15 @@
 
         .dept-logo {
           position: fixed;
-          bottom: 20px; /* 距離底部距離 */
-          right: 25px;   /* 距離左側距離 */
-          width: 150px; /* 調整 Logo 大小 */
-          height: auto;
-          z-index: 2000; /* 確保在最上層 */
-          opacity: 0.8;  /* 稍微透明一點點比較自然 */
-          pointer-events: none; /* 讓滑鼠點擊可以穿透圖標，不影響遊戲操作 */
+          bottom: 20px; right: 25px;
+          width: 150px; height: auto;
+          z-index: 2000; opacity: 0.8; pointer-events: none;
         }
 
         #game-container {
             width: 95%; max-width: 1100px; height: 800px;
             border: 6px solid var(--neon-blue); position: relative;
-            background: #111; box-shadow: 0 0 35px var(--neon-blue);
+            background: #1a0c00; box-shadow: 0 0 35px var(--neon-blue);
             padding: 40px; box-sizing: border-box;
         }
 
@@ -62,39 +57,45 @@
             cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 18px;
             transition: 0.3s;
         }
-        .btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 25px var(--neon-blue); }
+        .btn:hover { background: var(--neon-blue); color: #1a0c00; box-shadow: 0 0 25px var(--neon-blue); }
 
         .char-box { display: flex; gap: 25px; margin-bottom: 50px; }
-        .char-card { 
-            border: 4px solid var(--neon-blue); padding: 25px; cursor: pointer; 
+        .char-card {
+            border: 4px solid var(--neon-blue); padding: 25px; cursor: pointer;
             width: 220px; transition: 0.3s; font-size: 32px; font-weight: bold;
         }
         .char-card small { font-size: 20px; color: var(--neon-blue); }
-        .char-card.selected { background: var(--neon-blue); color: black; transform: scale(1.15); }
+        .char-card.selected { background: var(--neon-blue); color: #1a0c00; transform: scale(1.15); }
 
         #map-path-container {
             width: 98%; height: 250px; position: relative; margin-top: 60px;
             display: flex; align-items: flex-end; justify-content: space-between;
         }
-        .path-line-base { position: absolute; bottom: 25px; left: 0; width: 100%; height: 8px; background: #333; z-index: 1; }
+        .path-line-base { position: absolute; bottom: 25px; left: 0; width: 100%; height: 8px; background: #3a2000; z-index: 1; }
         .map-node {
-            width: var(--node-size); height: 60px; border: 4px solid #444; background: #000;
+            width: var(--node-size); height: 60px; border: 4px solid #3a2000; background: #0f0800;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: bold; color: #888; position: relative; z-index: 5;
+            font-size: 18px; font-weight: bold; color: #664400; position: relative; z-index: 5;
         }
         .map-node.completed { border-color: var(--neon-blue); color: var(--neon-blue); }
-        .map-node.active { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 25px var(--neon-blue); font-size: 20px; }
-        
+        .map-node.active { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 25px var(--neon-pink); font-size: 20px; }
+
         #player-avatar { width: 50px; height: 50px; position: absolute; bottom: 45px; z-index: 10; transition: left 1s linear; display: none; }
         .pixel-v2 {
             position: absolute; width: 6px; height: 6px; background: transparent;
-            box-shadow: 18px 0px #666, 24px 0px #666, 12px 6px #888, 18px 6px #fff, 24px 6px #888, 30px 6px #888, 12px 12px #666, 18px 12px #666, 24px 12px #666, 30px 12px #666, 18px 18px #edc9af, 24px 18px #edc9af, 12px 24px #3366ff, 18px 24px #3366ff, 24px 24px #3366ff, 30px 24px #3366ff, 6px 30px #3366ff, 12px 30px #fff, 18px 30px #3366ff, 24px 30px #fff, 30px 30px #3366ff, 36px 30px #3366ff, 12px 36px #3366ff, 18px 36px #3366ff, 24px 36px #3366ff, 30px 36px #3366ff, 12px 42px #000, 30px 42px #000;
+            box-shadow: 18px 0px #666, 24px 0px #666, 12px 6px #888, 18px 6px #fff, 24px 6px #888, 30px 6px #888,
+                        12px 12px #666, 18px 12px #666, 24px 12px #666, 30px 12px #666,
+                        18px 18px #edc9af, 24px 18px #edc9af,
+                        12px 24px #cc5500, 18px 24px #cc5500, 24px 24px #cc5500, 30px 24px #cc5500,
+                        6px 30px #cc5500, 12px 30px #fff, 18px 30px #cc5500, 24px 30px #fff, 30px 30px #cc5500, 36px 30px #cc5500,
+                        12px 36px #cc5500, 18px 36px #cc5500, 24px 36px #cc5500, 30px 36px #cc5500,
+                        12px 42px #000, 30px 42px #000;
         }
 
         .pixel-flower {
             width: 4px; height: 4px; background: transparent;
             margin-bottom: 130px;
-            box-shadow: 
+            box-shadow:
                 -4px -12px var(--flower-red), 0 -12px var(--flower-red), 4px -12px var(--flower-red),
                 -8px -8px var(--flower-pink), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-pink),
                 -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-pink), 0 -4px var(--flower-red), 4px -4px var(--flower-pink), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
@@ -116,28 +117,24 @@
         #result-screen { position: relative; justify-content: flex-end; padding-bottom: 60px; }
         #result-score-corner {
             position: absolute; bottom: 30px; right: 40px;
-            font-size: 18px; color: #666; text-align: right; line-height: 1.6;
+            font-size: 18px; color: #664400; text-align: right; line-height: 1.6;
         }
 
         #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 40px; }
         .stat-bar { width: 45%; border: 3px solid var(--neon-pink); padding: 20px; font-size: 26px; font-weight: bold; }
-        #question-display { min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #444; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+        #question-display { min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #3a2000; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         #q-text { font-size: 36px; line-height: 1.5; color: #fff; text-shadow: 0 0 15px var(--neon-blue); font-weight: bold; }
         #q-type-badge { font-size: 14px; color: var(--neon-pink); font-family: 'Press Start 2P', cursive; margin-bottom: 10px; }
-        
+
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-        /* 4選項時用更小字體 */
         .options-grid.four-opts .btn { font-family: "Microsoft JhengHei", sans-serif; font-size: 22px; font-weight: bold; padding: 18px 15px; text-align: left; }
-        /* 短答案（字謎/拼音）保持大字 */
         .options-grid.short-opts .btn { font-family: sans-serif; font-size: 30px; font-weight: bold; padding: 22px; }
 
-        #timer-container { width: 100%; height: 15px; background: #000; border: 2px solid #444; margin: 10px 0 15px; }
+        #timer-container { width: 100%; height: 15px; background: #1a0c00; border: 2px solid #3a2000; margin: 10px 0 15px; }
         #timer-bar { width: 100%; height: 100%; background: var(--neon-blue); transition: width 0.1s linear; }
 
         #feedback { font-size: 28px; margin-top: 15px; height: 36px; font-weight: bold; }
-
-        /* 難度說明標籤 */
-        .diff-desc { font-size: 16px; color: #888; margin-top: -10px; margin-bottom: 20px; }
+        .diff-desc { font-size: 16px; color: #664400; margin-top: -10px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -198,14 +195,13 @@
     <div id="result-screen" class="screen">
         <div class="pixel-flower" id="flower-reward"></div>
         <h1 id="result-msg" style="font-size: 44px; color: var(--neon-blue); margin-bottom: 30px;">任務結束</h1>
-        <div id="mother-msg" style="display:none; font-size: 36px; font-weight: bold; color: white; text-shadow: 0 0 20px var(--flower-pink); margin-bottom: 40px; letter-spacing: 2px;">這束花，送給最親愛的媽媽！</div>
+        <div id="mother-msg" style="display:none; font-size: 36px; font-weight: bold; color: white; text-shadow: 0 0 20px var(--flower-pink); margin-bottom: 40px; letter-spacing: 2px;"></div>
         <button class="btn" style="font-size: 24px;" onclick="location.reload()">重新遠征</button>
         <div id="result-score-corner"></div>
     </div>
 </div>
 
 <script>
-// ===================== 題庫 QB =====================
 const QB = {
   riddle: [
     {q:"一人一張口。",a:"合",w:["含","答","口"]},
@@ -250,7 +246,6 @@ const QB = {
     {q:"誰是傻瓜？",a:"保",w:["愚","笨","呆"]},
     {q:"請勿入口。",a:"囫",w:["入","口","圈"]},
   ],
-
   kanji_structure: [
     { q: "「校」的部首是什麼？", a: "木", w: ["交", "卜", "文"] },
     { q: "「媽」的部首是什麼？", a: "女", w: ["馬", "口", "一"] },
@@ -292,8 +287,6 @@ const QB = {
     { q: "小 ＋ 大 = ？", a: "尖", w: ["塵", "奈", "夯"] },
     { q: "牛 ＋ 寺 = ？", a: "特", w: ["持", "等", "詩"] }
   ],
-
-  // 文化知識 — ABCD 選項格式 (opts陣列, a為正確選項字母)
   culture: [
     {q:"下列何者是宋代以後主要的私學機構？",a:"A",opts:["(A)書院","(B)精舍","(C)國子監","(D)太學"]},
     {q:"哪句成語顯示服飾具有區隔夷夏的作用？",a:"C",opts:["(A)布衣卿相","(B)衣冠禽獸","(C)被髮左衽","(D)沐猴而冠"]},
@@ -326,8 +319,6 @@ const QB = {
     {q:"台灣「辦桌」負責指揮調度整場宴席的主廚是？",a:"B",opts:["(A)店小二","(B)總舖師","(C)跑堂","(D)掌櫃"]},
     {q:"金門地區隨處可見用來鎮風辟邪的石刻像是？",a:"B",opts:["(A)石敢當","(B)風獅爺","(C)劍獅","(D)麒麟"]},
   ],
-
-  // 成語 — ABCD 選項格式
   idiom: [
     {q:"「胸有成竹」現用來比喻什麼？",a:"B",opts:["(A)為人正直","(B)很有把握","(C)孤芳自賞","(D)內心空虛"]},
     {q:"哪成語形容「文章極好，非常有價值」？",a:"A",opts:["(A)洛陽紙貴","(B)韋編三絕","(C)汗牛充棟","(D)買櫝還珠"]},
@@ -375,8 +366,6 @@ const QB = {
     {q:"「四面楚歌」形容處境？",a:"C",opts:["(A)意外大勝","(B)力挽狂瀾","(C)四面受敵、孤立無援","(D)重振旗鼓"]},
     {q:"「完璧歸趙」主要人物？",a:"B",opts:["(A)廉頗","(B)藺相如","(C)趙括","(D)藺相公"]}
   ],
-
-  // 拼音 — 字串比對格式 (a為正確答案, w為錯誤選項)
   pinyin: [
     {q:"「南港展覽館」的拼音？",a:"Nángǎng Zhǎnlǎnguǎn",w:["Lángǎng Zhǎnlǎnguǎn","Nángǎn Zhǎnlǎnguǎn","Nángǎng Zhǎnlǎguǎn"]},
     {q:"「內湖」的拼音？",a:"Nèihú",w:["Lèihú","Nèihóu","Nèihóng"]},
@@ -416,70 +405,28 @@ const QB = {
   ]
 };
 
-// ===================== 難度對應題型 =====================
-// easy: riddle + kanji_structure
-// normal: pinyin + idiom
-// hard: culture
+const DIFF_TYPES = { easy: ['riddle', 'kanji_structure'], normal: ['pinyin', 'idiom'], hard: ['culture'] };
+const TYPE_LABELS = { riddle: '字謎', kanji_structure: '漢字結構', pinyin: '拼音練習', idiom: '成語', culture: '文化知識' };
 
-const DIFF_TYPES = {
-  easy: ['riddle', 'kanji_structure'],
-  normal: ['pinyin', 'idiom'],
-  hard: ['culture']
-};
-
-const TYPE_LABELS = {
-  riddle: '字謎',
-  kanji_structure: '漢字結構',
-  pinyin: '拼音練習',
-  idiom: '成語',
-  culture: '文化知識'
-};
-
-// 判斷題目格式：opts格式(ABCD) or w格式(字串)
 function isOptsFormat(q) { return !!q.opts; }
 
-// 將任一題型題目轉為統一格式 { question, answer(字串), choices(字串陣列), type }
 function normalizeQ(raw, typeName) {
   if (isOptsFormat(raw)) {
-    // ABCD格式：a 是正確字母，opts陣列含完整選項
-    const correctIdx = raw.a.charCodeAt(0) - 65; // 'A'=0
-    return {
-      question: raw.q,
-      answer: raw.opts[correctIdx],
-      choices: [...raw.opts].sort(() => 0.5 - Math.random()),
-      isLong: true,
-      type: typeName
-    };
+    const correctIdx = raw.a.charCodeAt(0) - 65;
+    return { question: raw.q, answer: raw.opts[correctIdx], choices: [...raw.opts].sort(() => 0.5 - Math.random()), isLong: true, type: typeName };
   } else {
-    // 字串格式：a 是正確答案，w是錯誤選項
-    const choices = [raw.a, ...raw.w].sort(() => 0.5 - Math.random());
-    return {
-      question: raw.q,
-      answer: raw.a,
-      choices,
-      isLong: false,
-      type: typeName
-    };
+    return { question: raw.q, answer: raw.a, choices: [raw.a, ...raw.w].sort(() => 0.5 - Math.random()), isLong: false, type: typeName };
   }
 }
 
 function getRandQ(typeName) {
   const pool = QB[typeName];
-  const raw = pool[Math.floor(Math.random() * pool.length)];
-  return normalizeQ(raw, typeName);
+  return normalizeQ(pool[Math.floor(Math.random() * pool.length)], typeName);
 }
 
-// ===================== 遊戲狀態 =====================
-let state = {
-  player: 0, ai: 0, level: 0, difficulty: '', char: '',
-  questions: [], qIdx: 0, timer: null, time: 15,
-  nodePositions: [], playedPool: [], wrongCount: 0
-};
+let state = { player: 0, ai: 0, level: 0, difficulty: '', char: '', questions: [], qIdx: 0, timer: null, time: 15, nodePositions: [], playedPool: [], wrongCount: 0 };
 
-function goToScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+function goToScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
 function selectChar(c) {
   state.char = c;
@@ -515,8 +462,7 @@ function updateMapUI() {
     let node = document.getElementById(`node-${i}`);
     node.className = 'map-node' + (i < state.level ? ' completed' : (i === state.level ? ' active' : ''));
   }
-  document.getElementById('map-action-btn').innerText =
-    state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最後考驗");
+  document.getElementById('map-action-btn').innerText = state.level === 0 ? "初始化遠征" : (state.level <= 5 ? `啟動關卡 ${state.level}` : "最後考驗");
 }
 
 function moveAvatarToLevel(targetLevel) {
@@ -529,22 +475,13 @@ function startCurrentLevel() {
   if(state.level === 0) { moveAvatarToLevel(1); return; }
   state.qIdx = 0;
   const types = DIFF_TYPES[state.difficulty];
-
   if(state.level <= 5) {
-    const t = types[Math.floor(Math.random() * types.length)];
-    const q = getRandQ(t);
+    const q = getRandQ(types[Math.floor(Math.random() * types.length)]);
     state.questions = [q];
     state.playedPool.push(q);
   } else {
-    // 最終關：從過去答過的題中抽3題 + 補足到5題
-    let finalSet = [];
-    let shuffledPlayed = [...state.playedPool].sort(() => 0.5 - Math.random());
-    finalSet = shuffledPlayed.slice(0, 3);
-    while(finalSet.length < 5) {
-      const t = types[Math.floor(Math.random() * types.length)];
-      const q = getRandQ(t);
-      finalSet.push(q);
-    }
+    let finalSet = [...state.playedPool].sort(() => 0.5 - Math.random()).slice(0, 3);
+    while(finalSet.length < 5) finalSet.push(getRandQ(types[Math.floor(Math.random() * types.length)]));
     state.questions = finalSet.sort(() => 0.5 - Math.random());
   }
   goToScreen('battle-screen');
@@ -556,16 +493,10 @@ function renderQuestion() {
   document.getElementById('q-text').innerText = q.question;
   document.getElementById('q-type-badge').innerText = `【${TYPE_LABELS[q.type] || q.type}】`;
   document.getElementById('feedback').innerText = "";
-
   const grid = document.getElementById('options-box');
   grid.className = 'options-grid ' + (q.isLong ? 'four-opts' : 'short-opts');
-
   let html = '';
-  q.choices.forEach(o => {
-    // 轉義單引號避免 onclick 字串問題
-    const escaped = o.replace(/'/g, "\\'");
-    html += `<button class="btn" onclick="answer('${escaped}')">${o}</button>`;
-  });
+  q.choices.forEach(o => { html += `<button class="btn" onclick="answer('${o.replace(/'/g, "\\'")}')">${o}</button>`; });
   grid.innerHTML = html;
   startTimer();
 }
@@ -574,29 +505,18 @@ function answer(pick) {
   clearInterval(state.timer);
   const q = state.questions[state.qIdx];
   const isCorrect = (pick === q.answer);
-
   if (isCorrect) state.player += Math.round((state.time / 15) * 1000);
   else state.wrongCount++;
-
   state.ai += (Math.random() > 0.4 ? Math.floor(Math.random() * 300 + 400) : 0);
-
   document.getElementById('p-score').innerText = `玩家: ${state.player}`;
   document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
   document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.answer;
-  document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-blue)' : 'red';
-
+  document.getElementById('feedback').style.color = isCorrect ? '#ff9500' : '#ff3300';
   setTimeout(() => {
     state.qIdx++;
-    if(state.qIdx < state.questions.length) {
-      renderQuestion();
-    } else {
-      if(state.level < 6) {
-        goToScreen('map-screen');
-        setTimeout(() => moveAvatarToLevel(state.level + 1), 600);
-      } else {
-        showResult();
-      }
-    }
+    if(state.qIdx < state.questions.length) renderQuestion();
+    else if(state.level < 6) { goToScreen('map-screen'); setTimeout(() => moveAvatarToLevel(state.level + 1), 600); }
+    else showResult();
   }, 1500);
 }
 
@@ -624,6 +544,9 @@ function showResult() {
   if (isWin && isPerfect) {
     flower.style.display = 'block';
     motherMsg.style.display = 'block';
+    motherMsg.innerText = "這束花，送給最親愛的媽媽！";
+    motherMsg.style.color = "white";
+    motherMsg.style.textShadow = "0 0 20px var(--flower-pink)";
     msg.innerText = "完美遠征：粉紅康乃馨解鎖";
     msg.style.color = "var(--flower-pink)";
     msg.style.textShadow = "0 0 15px var(--flower-red)";
@@ -631,12 +554,12 @@ function showResult() {
     flower.style.display = 'none';
     motherMsg.style.display = 'block';
     motherMsg.innerText = isWin ? "遠征成功！再接再厲，全答對解鎖康乃馨！" : "任務失敗⋯⋯重整旗鼓，再戰一場！";
-    motherMsg.style.color = isWin ? "var(--neon-blue)" : "#ff4444";
-    motherMsg.style.textShadow = isWin ? "0 0 20px var(--neon-blue)" : "0 0 20px #ff0000";
+    motherMsg.style.color = isWin ? "#ff9500" : "#ff4444";
+    motherMsg.style.textShadow = isWin ? "0 0 20px #ff7700" : "0 0 20px #ff0000";
     msg.innerText = isWin ? "遠征成功" : "任務失敗";
-    msg.style.color = isWin ? "var(--neon-blue)" : "red";
-    scoreCorner.innerText += isWin ? "\n全答對可獲得粉色康乃馨唷！" : "\n守護失敗，請重新啟動系統！";
-  }   
+    msg.style.color = isWin ? "#ff9500" : "#ff3300";
+    msg.style.textShadow = isWin ? "0 0 15px #ff7700" : "0 0 15px #ff0000";
+  }
 }
 </script>
 </body>
