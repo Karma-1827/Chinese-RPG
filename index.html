@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-green: #00ffff;
+            --neon-blue: #00ffff;
             --neon-pink: #ff00ff;
             --neon-blue: #00ffff;
             --dark-bg: #0a0a0a;
@@ -19,7 +19,7 @@
 
         body {
             background-color: var(--dark-bg);
-            color: var(--neon-green);
+            color: var(--neon-blue);
             font-family: 'Segoe UI', "Microsoft JhengHei", "Heiti TC", sans-serif;
             margin: 0; overflow: hidden;
             display: flex; justify-content: center; align-items: center; height: 100vh;
@@ -44,8 +44,8 @@
 
         #game-container {
             width: 95%; max-width: 1100px; height: 800px;
-            border: 6px solid var(--neon-green); position: relative;
-            background: #111; box-shadow: 0 0 35px var(--neon-green);
+            border: 6px solid var(--neon-blue); position: relative;
+            background: #111; box-shadow: 0 0 35px var(--neon-blue);
             padding: 40px; box-sizing: border-box;
         }
 
@@ -56,13 +56,13 @@
         h3 { font-size: 36px; color: white; margin-bottom: 30px; font-weight: bold; }
 
         .btn {
-            background: transparent; color: var(--neon-green);
-            border: 4px solid var(--neon-green);
+            background: transparent; color: var(--neon-blue);
+            border: 4px solid var(--neon-blue);
             padding: 20px 40px; margin: 15px;
             cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 18px;
             transition: 0.3s;
         }
-        .btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 25px var(--neon-green); }
+        .btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 25px var(--neon-blue); }
 
         .char-box { display: flex; gap: 25px; margin-bottom: 50px; }
         .char-card { 
@@ -82,7 +82,7 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 18px; font-weight: bold; color: #888; position: relative; z-index: 5;
         }
-        .map-node.completed { border-color: var(--neon-green); color: var(--neon-green); }
+        .map-node.completed { border-color: var(--neon-blue); color: var(--neon-blue); }
         .map-node.active { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 25px var(--neon-blue); font-size: 20px; }
         
         #player-avatar { width: 50px; height: 50px; position: absolute; bottom: 45px; z-index: 10; transition: left 1s linear; display: none; }
@@ -132,7 +132,7 @@
         .options-grid.short-opts .btn { font-family: sans-serif; font-size: 30px; font-weight: bold; padding: 22px; }
 
         #timer-container { width: 100%; height: 15px; background: #000; border: 2px solid #444; margin: 10px 0 15px; }
-        #timer-bar { width: 100%; height: 100%; background: var(--neon-green); transition: width 0.1s linear; }
+        #timer-bar { width: 100%; height: 100%; background: var(--neon-blue); transition: width 0.1s linear; }
 
         #feedback { font-size: 28px; margin-top: 15px; height: 36px; font-weight: bold; }
 
@@ -197,7 +197,7 @@
 
     <div id="result-screen" class="screen">
         <div class="pixel-flower" id="flower-reward"></div>
-        <h1 id="result-msg" style="font-size: 44px; color: var(--neon-green); margin-bottom: 30px;">任務結束</h1>
+        <h1 id="result-msg" style="font-size: 44px; color: var(--neon-blue); margin-bottom: 30px;">任務結束</h1>
         <div id="mother-msg" style="display:none; font-size: 36px; font-weight: bold; color: white; text-shadow: 0 0 20px var(--flower-pink); margin-bottom: 40px; letter-spacing: 2px;">這束花，送給最親愛的媽媽！</div>
         <button class="btn" style="font-size: 24px;" onclick="location.reload()">重新遠征</button>
         <div id="result-score-corner"></div>
@@ -584,7 +584,7 @@ function answer(pick) {
   document.getElementById('p-score').innerText = `玩家: ${state.player}`;
   document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
   document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.answer;
-  document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-green)' : 'red';
+  document.getElementById('feedback').style.color = isCorrect ? 'var(--neon-blue)' : 'red';
 
   setTimeout(() => {
     state.qIdx++;
@@ -632,10 +632,10 @@ function showResult() {
     flower.style.display = 'none';
     motherMsg.style.display = 'block';
     motherMsg.innerText = isWin ? "遠征成功！再接再厲，全答對解鎖康乃馨！" : "任務失敗⋯⋯重整旗鼓，再戰一場！";
-    motherMsg.style.color = isWin ? "var(--neon-green)" : "#ff4444";
-    motherMsg.style.textShadow = isWin ? "0 0 20px var(--neon-green)" : "0 0 20px #ff0000";
+    motherMsg.style.color = isWin ? "var(--neon-blue)" : "#ff4444";
+    motherMsg.style.textShadow = isWin ? "0 0 20px var(--neon-blue)" : "0 0 20px #ff0000";
     msg.innerText = isWin ? "遠征成功" : "任務失敗";
-    msg.style.color = isWin ? "var(--neon-green)" : "red";
+    msg.style.color = isWin ? "var(--neon-blue)" : "red";
     scoreCorner.innerText += isWin ? "\n全答對可獲得粉色康乃馨唷！" : "\n守護失敗，請重新啟動系統！";
   }   
 }
