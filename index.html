@@ -31,6 +31,17 @@
             z-index: 100; background-size: 100% 4px; pointer-events: none;
         }
 
+        .dept-logo {
+          position: fixed;
+          bottom: 20px; /* 距離底部距離 */
+          right: 25px;   /* 距離左側距離 */
+          width: 150px; /* 調整 Logo 大小 */
+          height: auto;
+          z-index: 2000; /* 確保在最上層 */
+          opacity: 0.8;  /* 稍微透明一點點比較自然 */
+          pointer-events: none; /* 讓滑鼠點擊可以穿透圖標，不影響遊戲操作 */
+        }
+
         #game-container {
             width: 95%; max-width: 1100px; height: 800px;
             border: 6px solid var(--neon-green); position: relative;
@@ -130,7 +141,7 @@
     </style>
 </head>
 <body>
-
+<img src="NTNU-CSL-LOGO (12).png" class="dept-logo" alt="系所Logo">
 <div id="game-container">
     <div id="start-screen" class="screen active">
         <h1 style="font-size: 70px;">數位華語<br>像素勇者遠征</h1>
