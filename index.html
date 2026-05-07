@@ -15,9 +15,9 @@
             --c6: #a55eea;   /* 紫色 */
             --dark-bg: #0d0d1a;
             --node-size: 110px;
-            --flower-red: #ff4d6d;    /* 原本暗紅 → 亮粉紅 */
-            --flower-pink: #a55eea;   /* 原本粉紅 → 紫色 */
-            --flower-light: #22a6f2;  /* 原本淺粉 → 天藍 */
+            --flower-red: #ff0033;
+            --flower-pink: #ff4d6d;
+            --flower-light: #ff85a1;
         }
 
         body {
@@ -76,12 +76,6 @@
         }
         h3 { font-size: 36px; color: white; margin-bottom: 30px; font-weight: bold;
              text-shadow: 2px 2px var(--c6), -2px -2px var(--c5); }
-        @keyframes flower-glow {
-            0%   { transform: scale(9) translateY(0); filter: drop-shadow(0 0 15px #ff4d6d) hue-rotate(0deg); }
-            33%  { transform: scale(9.2) translateY(-5px); filter: drop-shadow(0 0 20px #a55eea) hue-rotate(120deg); }
-            66%  { transform: scale(9.1) translateY(-8px); filter: drop-shadow(0 0 20px #22a6f2) hue-rotate(240deg); }
-            100% { transform: scale(9) translateY(0); filter: drop-shadow(0 0 15px #f9ca24) hue-rotate(360deg); }
-        }
 
         /* 4個按鈕各有不同顏色 */
         .btn {
@@ -144,46 +138,70 @@
         #player-avatar { width: 50px; height: 50px; position: absolute; bottom: 45px; z-index: 10; transition: left 1s linear; display: none; }
         .pixel-v2 {
             position: absolute; width: 6px; height: 6px; background: transparent;
-            box-shadow:
-                /* 頂部花瓣 - 更圓弧 */
-                0 -20px var(--flower-red),
-                -4px -20px var(--flower-red), 4px -20px var(--flower-red),
-                -8px -16px var(--flower-pink), -4px -16px var(--flower-light), 0 -16px var(--flower-pink), 4px -16px var(--flower-light), 8px -16px var(--flower-pink),
-                /* 中層花瓣 */
-                -16px -12px var(--flower-red), -12px -12px var(--flower-pink), -8px -12px var(--flower-light), -4px -12px var(--flower-pink), 0 -12px var(--flower-red), 4px -12px var(--flower-pink), 8px -12px var(--flower-light), 12px -12px var(--flower-pink), 16px -12px var(--flower-red),
-                -16px -8px var(--flower-pink), -12px -8px var(--flower-light), -8px -8px var(--flower-red), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-red), 12px -8px var(--flower-light), 16px -8px var(--flower-pink),
-                /* 花心 */
-                -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-light), 0 -4px var(--flower-red), 4px -4px var(--flower-light), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
-                -8px 0 var(--flower-pink), -4px 0 var(--flower-red), 0 0 var(--flower-light), 4px 0 var(--flower-red), 8px 0 var(--flower-pink),
-                /* 花萼 */
-                -4px 4px #52b788, 0 4px #40916c, 4px 4px #52b788,
-                /* 莖 */
-                0 8px #2d6a4f, 0 12px #2d6a4f, 0 16px #2d6a4f, 0 20px #2d6a4f, 0 24px #2d6a4f, 0 28px #2d6a4f,
-                /* 葉子 */
-                -4px 12px #52b788, -8px 12px #40916c, -12px 12px #2d6a4f,
-                4px 20px #52b788, 8px 20px #40916c, 12px 20px #2d6a4f;
+            box-shadow: 18px 0px #aaa, 24px 0px #aaa, 12px 6px #ccc, 18px 6px #fff, 24px 6px #ccc, 30px 6px #ccc,
+                        12px 12px #aaa, 18px 12px #aaa, 24px 12px #aaa, 30px 12px #aaa,
+                        18px 18px #ffd6a5, 24px 18px #ffd6a5,
+                        12px 24px #f9ca24, 18px 24px #f9ca24, 24px 24px #f9ca24, 30px 24px #f9ca24,
+                        6px 30px #ff4d6d, 12px 30px #fff, 18px 30px #22a6f2, 24px 30px #fff, 30px 30px #6ab04c, 36px 30px #a55eea,
+                        12px 36px #f9ca24, 18px 36px #f9ca24, 24px 36px #f9ca24, 30px 36px #f9ca24,
+                        12px 42px #000, 30px 42px #000;
         }
 
         .pixel-flower {
             width: 4px; height: 4px; background: transparent;
-            margin-bottom: 130px;
+            margin-bottom: 90px;
             box-shadow:
-                -4px -12px var(--flower-red), 0 -12px var(--flower-red), 4px -12px var(--flower-red),
-                -8px -8px var(--flower-pink), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-pink),
-                -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-pink), 0 -4px var(--flower-red), 4px -4px var(--flower-pink), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
-                -8px 0 var(--flower-red), -4px 0 var(--flower-red), 0 0 var(--flower-red), 4px 0 var(--flower-red), 8px 0 var(--flower-red),
-                -4px 4px #2d6a4f, 0 4px #40916c, 4px 4px #2d6a4f,
-                0 8px #1b4332, 0 12px #1b4332, 0 16px #1b4332, 0 20px #1b4332,
-                -4px 12px #2d6a4f, -8px 12px #1b4332,
-                4px 16px #2d6a4f, 8px 16px #1b4332;
+                /* 頂部花瓣尖端 */
+                0px -28px var(--flower-red),
+                -4px -28px var(--flower-pink), 4px -28px var(--flower-pink),
+
+                /* 上層花瓣 */
+                -8px -24px var(--flower-red), -4px -24px var(--flower-light), 0px -24px var(--flower-pink), 4px -24px var(--flower-light), 8px -24px var(--flower-red),
+
+                /* 中上層花瓣 - 展開 */
+                -16px -20px var(--flower-pink), -12px -20px var(--flower-red), -8px -20px var(--flower-light), -4px -20px var(--flower-pink), 0px -20px var(--flower-red), 4px -20px var(--flower-pink), 8px -20px var(--flower-light), 12px -20px var(--flower-red), 16px -20px var(--flower-pink),
+
+                /* 中層花瓣 - 最寬 */
+                -20px -16px var(--flower-red), -16px -16px var(--flower-light), -12px -16px var(--flower-pink), -8px -16px var(--flower-red), -4px -16px var(--flower-light), 0px -16px var(--flower-pink), 4px -16px var(--flower-light), 8px -16px var(--flower-red), 12px -16px var(--flower-pink), 16px -16px var(--flower-light), 20px -16px var(--flower-red),
+
+                /* 中下層 */
+                -20px -12px var(--flower-pink), -16px -12px var(--flower-red), -12px -12px var(--flower-light), -8px -12px var(--flower-pink), -4px -12px var(--flower-red), 0px -12px var(--flower-light), 4px -12px var(--flower-red), 8px -12px var(--flower-pink), 12px -12px var(--flower-light), 16px -12px var(--flower-red), 20px -12px var(--flower-pink),
+
+                /* 花心上層 */
+                -16px -8px var(--flower-red), -12px -8px var(--flower-pink), -8px -8px var(--flower-light), -4px -8px var(--flower-red), 0px -8px var(--flower-pink), 4px -8px var(--flower-red), 8px -8px var(--flower-light), 12px -8px var(--flower-pink), 16px -8px var(--flower-red),
+
+                /* 花心 */
+                -12px -4px var(--flower-pink), -8px -4px var(--flower-light), -4px -4px var(--flower-red), 0px -4px var(--flower-light), 4px -4px var(--flower-red), 8px -4px var(--flower-light), 12px -4px var(--flower-pink),
+                -8px 0px var(--flower-red), -4px 0px var(--flower-pink), 0px 0px var(--flower-light), 4px 0px var(--flower-pink), 8px 0px var(--flower-red),
+
+                /* 花萼 */
+                -8px 4px #52b788, -4px 4px #74c69d, 0px 4px #40916c, 4px 4px #74c69d, 8px 4px #52b788,
+                -4px 8px #40916c, 0px 8px #2d6a4f, 4px 8px #40916c,
+
+                /* 莖 */
+                0px 12px #2d6a4f, 0px 16px #2d6a4f, 0px 20px #2d6a4f,
+                0px 24px #2d6a4f, 0px 28px #2d6a4f, 0px 32px #2d6a4f,
+                0px 36px #2d6a4f, 0px 40px #2d6a4f,
+
+                /* 左葉 */
+                -4px 16px #52b788, -8px 16px #40916c, -12px 16px #52b788,
+                -4px 20px #74c69d, -8px 20px #52b788,
+
+                /* 右葉 */
+                4px 28px #52b788, 8px 28px #40916c, 12px 28px #52b788,
+                4px 32px #74c69d, 8px 32px #52b788;
+
             transform: scale(5);
-            animation: flower-glow 2s infinite ease-in-out;
+            animation: flower-glow 3s infinite ease-in-out;
             display: none;
         }
 
         @keyframes flower-glow {
-            0%, 100% { transform: scale(9) translateY(0); filter: drop-shadow(0 0 10px var(--flower-pink)); }
-            50% { transform: scale(9.3) translateY(-8px); filter: drop-shadow(0 0 25px var(--flower-red)); }
+            0%   { transform: scale(5) translateY(0);   filter: drop-shadow(0 0 12px #ff4d6d) hue-rotate(0deg); }
+            25%  { transform: scale(5.1) translateY(-4px); filter: drop-shadow(0 0 18px #a55eea) hue-rotate(90deg); }
+            50%  { transform: scale(5.15) translateY(-6px); filter: drop-shadow(0 0 22px #22a6f2) hue-rotate(180deg); }
+            75%  { transform: scale(5.1) translateY(-4px); filter: drop-shadow(0 0 18px #f9ca24) hue-rotate(270deg); }
+            100% { transform: scale(5) translateY(0);   filter: drop-shadow(0 0 12px #ff4d6d) hue-rotate(360deg); }
         }
 
         #result-screen { position: relative; justify-content: flex-end; padding-bottom: 60px; }
@@ -632,7 +650,7 @@ function showResult() {
     motherMsg.innerText = "這束花，送給最親愛的媽媽！";
     motherMsg.style.color = "white";
     motherMsg.style.textShadow = "0 0 20px var(--flower-pink)";
-    msg.innerText = "完美遠征：粉紅康乃馨解鎖";
+    msg.innerText = "完美遠征：繽紛康乃馨解鎖";
     msg.style.color = "var(--flower-pink)";
     msg.style.textShadow = "0 0 15px var(--flower-red)";
   } else {
