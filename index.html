@@ -7,9 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #ff9500;
-            --neon-pink: #ffcc00;
-            --dark-bg: #0f0800;
+            --c1: #ff4d6d;   /* 粉紅 */
+            --c2: #ff9f43;   /* 橙黃 */
+            --c3: #f9ca24;   /* 亮黃 */
+            --c4: #6ab04c;   /* 草綠 */
+            --c5: #22a6f2;   /* 天藍 */
+            --c6: #a55eea;   /* 紫色 */
+            --dark-bg: #0d0d1a;
             --node-size: 110px;
             --flower-red: #ff0033;
             --flower-pink: #ff4d6d;
@@ -18,15 +22,30 @@
 
         body {
             background-color: var(--dark-bg);
-            color: var(--neon-blue);
+            color: #ffffff;
             font-family: 'Segoe UI', "Microsoft JhengHei", "Heiti TC", sans-serif;
             margin: 0; overflow: hidden;
             display: flex; justify-content: center; align-items: center; height: 100vh;
         }
 
+        /* 彩色星星背景動畫 */
+        body::after {
+            content: "★ ✦ ★ ✦ ★ ✦ ★ ✦ ★ ✦ ★ ✦ ★ ✦ ★ ✦";
+            display: block; position: fixed; top: 0; left: 0; width: 200%; height: 200%;
+            font-size: 24px; color: transparent;
+            background: radial-gradient(ellipse at 20% 20%, rgba(255,77,109,0.07) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 10%, rgba(34,166,242,0.07) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(165,94,234,0.07) 0%, transparent 50%);
+            z-index: 0; pointer-events: none; animation: bgpulse 6s infinite alternate;
+        }
+        @keyframes bgpulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
         body::before {
             content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
             z-index: 100; background-size: 100% 4px; pointer-events: none;
         }
 
@@ -34,61 +53,97 @@
           position: fixed;
           bottom: 20px; right: 25px;
           width: 150px; height: auto;
-          z-index: 2000; opacity: 0.8; pointer-events: none;
+          z-index: 2000; opacity: 0.85; pointer-events: none;
         }
 
         #game-container {
             width: 95%; max-width: 1100px; height: 800px;
-            border: 6px solid var(--neon-blue); position: relative;
-            background: #1a0c00; box-shadow: 0 0 35px var(--neon-blue);
-            padding: 40px; box-sizing: border-box;
+            border: 6px solid transparent;
+            border-image: linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6)) 1;
+            position: relative; background: #13132a;
+            box-shadow: 0 0 40px rgba(255,77,109,0.4), 0 0 80px rgba(34,166,242,0.2);
+            padding: 40px; box-sizing: border-box; z-index: 1;
         }
 
         .screen { display: none; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .screen.active { display: flex; }
 
-        h1 { font-family: 'Press Start 2P', cursive; font-size: 32px; text-shadow: 4px 4px var(--neon-pink); margin-bottom: 50px; line-height: 1.6; }
-        h3 { font-size: 36px; color: white; margin-bottom: 30px; font-weight: bold; }
+        h1 {
+            font-family: 'Press Start 2P', cursive; font-size: 32px; margin-bottom: 50px; line-height: 1.6;
+            background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+        }
+        h3 { font-size: 36px; color: white; margin-bottom: 30px; font-weight: bold;
+             text-shadow: 2px 2px var(--c6), -2px -2px var(--c5); }
 
+        /* 4個按鈕各有不同顏色 */
         .btn {
-            background: transparent; color: var(--neon-blue);
-            border: 4px solid var(--neon-blue);
+            background: transparent; color: #fff;
+            border: 4px solid var(--c5);
             padding: 20px 40px; margin: 15px;
             cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 18px;
             transition: 0.3s;
         }
-        .btn:hover { background: var(--neon-blue); color: #1a0c00; box-shadow: 0 0 25px var(--neon-blue); }
+        .btn:hover { background: var(--c5); color: #0d0d1a; box-shadow: 0 0 25px var(--c5), 0 0 50px rgba(34,166,242,0.4); transform: scale(1.05); }
+
+        /* 難度按鈕各自顏色 */
+        button.btn[onclick*="easy"] { border-color: var(--c4); color: var(--c4); }
+        button.btn[onclick*="easy"]:hover { background: var(--c4); color: #0d0d1a; box-shadow: 0 0 25px var(--c4); }
+        button.btn[onclick*="normal"] { border-color: var(--c2); color: var(--c2); }
+        button.btn[onclick*="normal"]:hover { background: var(--c2); color: #0d0d1a; box-shadow: 0 0 25px var(--c2); }
+        button.btn[onclick*="hard"] { border-color: var(--c1); color: var(--c1); }
+        button.btn[onclick*="hard"]:hover { background: var(--c1); color: #0d0d1a; box-shadow: 0 0 25px var(--c1); }
 
         .char-box { display: flex; gap: 25px; margin-bottom: 50px; }
         .char-card {
-            border: 4px solid var(--neon-blue); padding: 25px; cursor: pointer;
-            width: 220px; transition: 0.3s; font-size: 32px; font-weight: bold;
+            border: 4px solid var(--c3); padding: 25px; cursor: pointer;
+            width: 220px; transition: 0.3s; font-size: 32px; font-weight: bold; color: var(--c3);
         }
-        .char-card small { font-size: 20px; color: var(--neon-blue); }
-        .char-card.selected { background: var(--neon-blue); color: #1a0c00; transform: scale(1.15); }
+        #c1 { border-color: var(--c4); color: var(--c4); }
+        #c2 { border-color: var(--c5); color: var(--c5); }
+        #c3 { border-color: var(--c6); color: var(--c6); }
+        #c1 small { color: var(--c4); }
+        #c2 small { color: var(--c5); }
+        #c3 small { color: var(--c6); }
+        #c1.selected { background: var(--c4); color: #0d0d1a; transform: scale(1.15); box-shadow: 0 0 20px var(--c4); }
+        #c2.selected { background: var(--c5); color: #0d0d1a; transform: scale(1.15); box-shadow: 0 0 20px var(--c5); }
+        #c3.selected { background: var(--c6); color: #0d0d1a; transform: scale(1.15); box-shadow: 0 0 20px var(--c6); }
 
         #map-path-container {
             width: 98%; height: 250px; position: relative; margin-top: 60px;
             display: flex; align-items: flex-end; justify-content: space-between;
         }
-        .path-line-base { position: absolute; bottom: 25px; left: 0; width: 100%; height: 8px; background: #3a2000; z-index: 1; }
-        .map-node {
-            width: var(--node-size); height: 60px; border: 4px solid #3a2000; background: #0f0800;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: bold; color: #664400; position: relative; z-index: 5;
+        .path-line-base {
+            position: absolute; bottom: 25px; left: 0; width: 100%; height: 8px; z-index: 1;
+            background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6));
         }
-        .map-node.completed { border-color: var(--neon-blue); color: var(--neon-blue); }
-        .map-node.active { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 25px var(--neon-pink); font-size: 20px; }
+        .map-node {
+            width: var(--node-size); height: 60px; border: 4px solid #333; background: #1a1a2e;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: bold; color: #555; position: relative; z-index: 5;
+        }
+        /* 每個節點不同顏色 */
+        #node-0 { border-color: #444; }
+        #node-1.completed, #node-1.active { border-color: var(--c1); color: var(--c1); }
+        #node-2.completed, #node-2.active { border-color: var(--c2); color: var(--c2); }
+        #node-3.completed, #node-3.active { border-color: var(--c3); color: var(--c3); }
+        #node-4.completed, #node-4.active { border-color: var(--c4); color: var(--c4); }
+        #node-5.completed, #node-5.active { border-color: var(--c5); color: var(--c5); }
+        #node-6.completed, #node-6.active { border-color: var(--c6); color: var(--c6); }
+        .map-node.completed { opacity: 0.7; }
+        .map-node.active { box-shadow: 0 0 25px currentColor; font-size: 20px; animation: nodepulse 1.2s infinite alternate; }
+        @keyframes nodepulse { from { box-shadow: 0 0 10px currentColor; } to { box-shadow: 0 0 30px currentColor; } }
 
         #player-avatar { width: 50px; height: 50px; position: absolute; bottom: 45px; z-index: 10; transition: left 1s linear; display: none; }
         .pixel-v2 {
             position: absolute; width: 6px; height: 6px; background: transparent;
-            box-shadow: 18px 0px #666, 24px 0px #666, 12px 6px #888, 18px 6px #fff, 24px 6px #888, 30px 6px #888,
-                        12px 12px #666, 18px 12px #666, 24px 12px #666, 30px 12px #666,
-                        18px 18px #edc9af, 24px 18px #edc9af,
-                        12px 24px #cc5500, 18px 24px #cc5500, 24px 24px #cc5500, 30px 24px #cc5500,
-                        6px 30px #cc5500, 12px 30px #fff, 18px 30px #cc5500, 24px 30px #fff, 30px 30px #cc5500, 36px 30px #cc5500,
-                        12px 36px #cc5500, 18px 36px #cc5500, 24px 36px #cc5500, 30px 36px #cc5500,
+            box-shadow: 18px 0px #aaa, 24px 0px #aaa, 12px 6px #ccc, 18px 6px #fff, 24px 6px #ccc, 30px 6px #ccc,
+                        12px 12px #aaa, 18px 12px #aaa, 24px 12px #aaa, 30px 12px #aaa,
+                        18px 18px #ffd6a5, 24px 18px #ffd6a5,
+                        12px 24px #f9ca24, 18px 24px #f9ca24, 24px 24px #f9ca24, 30px 24px #f9ca24,
+                        6px 30px #ff4d6d, 12px 30px #fff, 18px 30px #22a6f2, 24px 30px #fff, 30px 30px #6ab04c, 36px 30px #a55eea,
+                        12px 36px #f9ca24, 18px 36px #f9ca24, 24px 36px #f9ca24, 30px 36px #f9ca24,
                         12px 42px #000, 30px 42px #000;
         }
 
@@ -117,24 +172,38 @@
         #result-screen { position: relative; justify-content: flex-end; padding-bottom: 60px; }
         #result-score-corner {
             position: absolute; bottom: 30px; right: 40px;
-            font-size: 18px; color: #664400; text-align: right; line-height: 1.6;
+            font-size: 18px; color: #555; text-align: right; line-height: 1.6;
         }
 
         #battle-stats { width: 100%; display: flex; justify-content: space-between; margin-bottom: 40px; }
-        .stat-bar { width: 45%; border: 3px solid var(--neon-pink); padding: 20px; font-size: 26px; font-weight: bold; }
-        #question-display { min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #3a2000; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
-        #q-text { font-size: 36px; line-height: 1.5; color: #fff; text-shadow: 0 0 15px var(--neon-blue); font-weight: bold; }
-        #q-type-badge { font-size: 14px; color: var(--neon-pink); font-family: 'Press Start 2P', cursive; margin-bottom: 10px; }
+        .stat-bar { width: 45%; border: 3px solid var(--c5); padding: 20px; font-size: 26px; font-weight: bold; color: var(--c5); }
+        #ai-score { border-color: var(--c1) !important; color: var(--c1); }
+        #question-display { min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 2px dashed #333; margin-bottom: 20px; width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.03); border-radius: 4px; }
+        #q-text { font-size: 36px; line-height: 1.5; color: #fff; font-weight: bold; text-shadow: 0 0 20px rgba(34,166,242,0.6); }
+        #q-type-badge { font-size: 14px; font-family: 'Press Start 2P', cursive; margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--c3), var(--c2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
         .options-grid.four-opts .btn { font-family: "Microsoft JhengHei", sans-serif; font-size: 22px; font-weight: bold; padding: 18px 15px; text-align: left; }
         .options-grid.short-opts .btn { font-family: sans-serif; font-size: 30px; font-weight: bold; padding: 22px; }
 
-        #timer-container { width: 100%; height: 15px; background: #1a0c00; border: 2px solid #3a2000; margin: 10px 0 15px; }
-        #timer-bar { width: 100%; height: 100%; background: var(--neon-blue); transition: width 0.1s linear; }
+        /* 選項按鈕四色 */
+        .options-grid .btn:nth-child(1) { border-color: var(--c1); color: var(--c1); }
+        .options-grid .btn:nth-child(1):hover { background: var(--c1); color: #0d0d1a; box-shadow: 0 0 20px var(--c1); }
+        .options-grid .btn:nth-child(2) { border-color: var(--c5); color: var(--c5); }
+        .options-grid .btn:nth-child(2):hover { background: var(--c5); color: #0d0d1a; box-shadow: 0 0 20px var(--c5); }
+        .options-grid .btn:nth-child(3) { border-color: var(--c3); color: var(--c3); }
+        .options-grid .btn:nth-child(3):hover { background: var(--c3); color: #0d0d1a; box-shadow: 0 0 20px var(--c3); }
+        .options-grid .btn:nth-child(4) { border-color: var(--c6); color: var(--c6); }
+        .options-grid .btn:nth-child(4):hover { background: var(--c6); color: #0d0d1a; box-shadow: 0 0 20px var(--c6); }
+
+        /* 計時條彩虹漸層 */
+        #timer-container { width: 100%; height: 15px; background: #1a1a2e; border: 2px solid #333; margin: 10px 0 15px; border-radius: 8px; overflow: hidden; }
+        #timer-bar { width: 100%; height: 100%; background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5)); transition: width 0.1s linear; }
 
         #feedback { font-size: 28px; margin-top: 15px; height: 36px; font-weight: bold; }
-        .diff-desc { font-size: 16px; color: #664400; margin-top: -10px; margin-bottom: 20px; }
+        .diff-desc { font-size: 16px; color: #666; margin-top: -10px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -281,6 +350,7 @@ const QB = {
     { q: "舌 ＋ 甘 = ？", a: "甜", w: ["恬", "亂", "辭"] },
     { q: "亻 ＋ 呆 = ？", a: "保", w: ["何", "伴", "信"] },
     { q: "禾 ＋ 火 = ？", a: "秋", w: ["愁", "秒", "炒"] },
+    { q: "竹 ＋ 毛 = ？", a: "筆", w: ["笛", "笨", "筐"] },
     { q: "口 ＋ 鳥 = ？", a: "鳴", w: ["雞", "鴨", "鵝"] },
     { q: "言 ＋ 成 = ？", a: "誠", w: ["城", "盛", "減"] },
     { q: "小 ＋ 大 = ？", a: "尖", w: ["塵", "奈", "夯"] },
@@ -510,7 +580,7 @@ function answer(pick) {
   document.getElementById('p-score').innerText = `玩家: ${state.player}`;
   document.getElementById('ai-score').innerText = `AI: ${state.ai}`;
   document.getElementById('feedback').innerText = isCorrect ? "解碼成功！" : "正確答案: " + q.answer;
-  document.getElementById('feedback').style.color = isCorrect ? '#ff9500' : '#ff3300';
+  document.getElementById('feedback').style.color = isCorrect ? '#6ab04c' : '#ff4d6d';
   setTimeout(() => {
     state.qIdx++;
     if(state.qIdx < state.questions.length) renderQuestion();
@@ -553,11 +623,11 @@ function showResult() {
     flower.style.display = 'none';
     motherMsg.style.display = 'block';
     motherMsg.innerText = isWin ? "遠征成功！再接再厲，全答對解鎖康乃馨！" : "任務失敗⋯⋯重整旗鼓，再戰一場！";
-    motherMsg.style.color = isWin ? "#ff9500" : "#ff4444";
-    motherMsg.style.textShadow = isWin ? "0 0 20px #ff7700" : "0 0 20px #ff0000";
+    motherMsg.style.color = isWin ? "#f9ca24" : "#ff4d6d";
+    motherMsg.style.textShadow = isWin ? "0 0 20px #ff9f43" : "0 0 20px #ff0000";
     msg.innerText = isWin ? "遠征成功" : "任務失敗";
-    msg.style.color = isWin ? "#ff9500" : "#ff3300";
-    msg.style.textShadow = isWin ? "0 0 15px #ff7700" : "0 0 15px #ff0000";
+    msg.style.color = isWin ? "#6ab04c" : "#ff4d6d";
+    msg.style.textShadow = isWin ? "0 0 15px #6ab04c" : "0 0 15px #ff0000";
   }
 }
 </script>
