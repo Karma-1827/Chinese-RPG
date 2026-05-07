@@ -144,13 +144,24 @@
         #player-avatar { width: 50px; height: 50px; position: absolute; bottom: 45px; z-index: 10; transition: left 1s linear; display: none; }
         .pixel-v2 {
             position: absolute; width: 6px; height: 6px; background: transparent;
-            box-shadow: 18px 0px #aaa, 24px 0px #aaa, 12px 6px #ccc, 18px 6px #fff, 24px 6px #ccc, 30px 6px #ccc,
-                        12px 12px #aaa, 18px 12px #aaa, 24px 12px #aaa, 30px 12px #aaa,
-                        18px 18px #ffd6a5, 24px 18px #ffd6a5,
-                        12px 24px #f9ca24, 18px 24px #f9ca24, 24px 24px #f9ca24, 30px 24px #f9ca24,
-                        6px 30px #ff4d6d, 12px 30px #fff, 18px 30px #22a6f2, 24px 30px #fff, 30px 30px #6ab04c, 36px 30px #a55eea,
-                        12px 36px #f9ca24, 18px 36px #f9ca24, 24px 36px #f9ca24, 30px 36px #f9ca24,
-                        12px 42px #000, 30px 42px #000;
+            box-shadow:
+                /* 頂部花瓣 - 更圓弧 */
+                0 -20px var(--flower-red),
+                -4px -20px var(--flower-red), 4px -20px var(--flower-red),
+                -8px -16px var(--flower-pink), -4px -16px var(--flower-light), 0 -16px var(--flower-pink), 4px -16px var(--flower-light), 8px -16px var(--flower-pink),
+                /* 中層花瓣 */
+                -16px -12px var(--flower-red), -12px -12px var(--flower-pink), -8px -12px var(--flower-light), -4px -12px var(--flower-pink), 0 -12px var(--flower-red), 4px -12px var(--flower-pink), 8px -12px var(--flower-light), 12px -12px var(--flower-pink), 16px -12px var(--flower-red),
+                -16px -8px var(--flower-pink), -12px -8px var(--flower-light), -8px -8px var(--flower-red), -4px -8px var(--flower-light), 0 -8px var(--flower-pink), 4px -8px var(--flower-light), 8px -8px var(--flower-red), 12px -8px var(--flower-light), 16px -8px var(--flower-pink),
+                /* 花心 */
+                -12px -4px var(--flower-red), -8px -4px var(--flower-pink), -4px -4px var(--flower-light), 0 -4px var(--flower-red), 4px -4px var(--flower-light), 8px -4px var(--flower-pink), 12px -4px var(--flower-red),
+                -8px 0 var(--flower-pink), -4px 0 var(--flower-red), 0 0 var(--flower-light), 4px 0 var(--flower-red), 8px 0 var(--flower-pink),
+                /* 花萼 */
+                -4px 4px #52b788, 0 4px #40916c, 4px 4px #52b788,
+                /* 莖 */
+                0 8px #2d6a4f, 0 12px #2d6a4f, 0 16px #2d6a4f, 0 20px #2d6a4f, 0 24px #2d6a4f, 0 28px #2d6a4f,
+                /* 葉子 */
+                -4px 12px #52b788, -8px 12px #40916c, -12px 12px #2d6a4f,
+                4px 20px #52b788, 8px 20px #40916c, 12px 20px #2d6a4f;
         }
 
         .pixel-flower {
