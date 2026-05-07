@@ -15,9 +15,9 @@
             --c6: #a55eea;   /* 紫色 */
             --dark-bg: #0d0d1a;
             --node-size: 110px;
-            --flower-red: #ff0033;
-            --flower-pink: #ff4d6d;
-            --flower-light: #ff85a1;
+            --flower-red: #ff4d6d;    /* 原本暗紅 → 亮粉紅 */
+            --flower-pink: #a55eea;   /* 原本粉紅 → 紫色 */
+            --flower-light: #22a6f2;  /* 原本淺粉 → 天藍 */
         }
 
         body {
@@ -76,6 +76,12 @@
         }
         h3 { font-size: 36px; color: white; margin-bottom: 30px; font-weight: bold;
              text-shadow: 2px 2px var(--c6), -2px -2px var(--c5); }
+        @keyframes flower-glow {
+            0%   { transform: scale(9) translateY(0); filter: drop-shadow(0 0 15px #ff4d6d) hue-rotate(0deg); }
+            33%  { transform: scale(9.2) translateY(-5px); filter: drop-shadow(0 0 20px #a55eea) hue-rotate(120deg); }
+            66%  { transform: scale(9.1) translateY(-8px); filter: drop-shadow(0 0 20px #22a6f2) hue-rotate(240deg); }
+            100% { transform: scale(9) translateY(0); filter: drop-shadow(0 0 15px #f9ca24) hue-rotate(360deg); }
+        }
 
         /* 4個按鈕各有不同顏色 */
         .btn {
