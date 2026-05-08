@@ -512,6 +512,30 @@
         <h1 style="font-size: 70px;">數位華語<br>像素勇者遠征</h1>
         <button class="btn" style="font-size: 30px; margin-top: 30px;" onclick="goToScreen('char-select')">開始冒險</button>
     </div>
+    <script>
+        // 這段小程式碼會每 0.5 秒檢查一次，直到不蒜子把數字傳回來
+        var fixBusuanzi = setInterval(function() {
+            var originalValue = document.getElementById('busuanzi_value_site_pv').innerText;
+            if (originalValue !== "" && originalValue !== "--") {
+                // 取得原始數字
+                var count = parseInt(originalValue);
+                // 設定偏移量 (減去測試時累積的 13)
+                var offset = 13; 
+                var finalShow = count - offset;
+                
+                // 確保數字不會變成負數
+                if (finalShow < 0) finalShow = 0;
+                
+                // 把計算後的結果填入顯示區域
+                document.getElementById('display_pv_value').innerText = finalShow;
+                // 顯示整個容器
+                document.getElementById('busuanzi_container_site_pv').style.display = "inline-block";
+                
+                // 停止檢查
+                clearInterval(fixBusuanzi);
+            }
+        }, 500);
+    </script>
 
     <div id="char-select" class="screen">
         <h3>選擇你的身份</h3>
@@ -988,19 +1012,6 @@ function showResult() {
   }
 }
 
-// 等不蒜子載入完後，把數字扣掉今天前的累計
-window.addEventListener('load', () => {
-    const offset = 15; // 改成今晚的實際數字
-    const el = document.getElementById('busuanzi_value_site_pv');
-    const observer = new MutationObserver(() => {
-        const val = parseInt(el.innerText);
-        if (!isNaN(val)) {
-            el.innerText = Math.max(0, val - offset);
-            observer.disconnect();
-        }
-    });
-    observer.observe(el, { childList: true });
-});
 </script>
 </body>
 </html>
