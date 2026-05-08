@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>華語RPG闖關</title>
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -249,6 +250,12 @@
         }
         #music-btn:hover { background: var(--c3); color: #0d0d1a; box-shadow: 0 0 15px var(--c3); }
 
+        #visit-counter {
+            position: fixed; bottom: 18px; left: 20px; z-index: 2000;
+            font-size: 13px; color: #555;
+            pointer-events: none;
+        }
+
         /* 說明視窗 */
         #info-overlay {
             display: none; position: fixed; inset: 0;
@@ -478,7 +485,7 @@
 
         <div class="info-section">
             <h4>📝 題目來源</h4>
-            <p>本遊戲題目由<strong style="color:var(--c3)">臺師大華語系教授們</strong>出題及網路資源整理，經審查確認正確性後收錄。</p>
+            <p>本遊戲題目由<strong style="color:var(--c3)">系上老師</strong>出題及網路資源整理，經審查確認正確性後收錄。</p>
         </div>
 
         <div class="info-section">
@@ -496,6 +503,9 @@
 </div>
 
 <img src="NTNU-CSL-LOGO (12).png" class="dept-logo" alt="系所Logo">
+<div id="visit-counter">
+    👾 累計瀏覽 <span id="busuanzi_value_site_pv">...</span> 次
+</div>
 <div id="game-container">
     <div id="start-screen" class="screen active">
         <h1 style="font-size: 100px;">NTNU CSL</h1>
@@ -627,7 +637,7 @@ const QB = {
     { q: "口 ＋ 牙 = ？", a: "呀", w: ["穿", "鴉", "訝"] },
     { q: "日 ＋ 月 = ？", a: "明", w: ["旦", "玥", "閒"] },
     { q: "女 ＋ 子 = ？", a: "好", w: ["如", "媽", "耍"] },
-    { q: "門 ＋ 市 = ？", a: "鬧", w: ["闖", "閃", "問"] },
+    { q: "鬥 ＋ 市 = ？", a: "鬧", w: ["闖", "閃", "問"] },
     { q: "木 ＋ 木 = ？", a: "林", w: ["森", "相", "札"] },
     { q: "氵 ＋ 青 = ？", a: "清", w: ["請", "睛", "精"] },
     { q: "忄 ＋ 曼 = ？", a: "慢", w: ["漫", "饅", "蔓"] },
@@ -638,6 +648,7 @@ const QB = {
     { q: "舌 ＋ 甘 = ？", a: "甜", w: ["恬", "亂", "辭"] },
     { q: "亻 ＋ 呆 = ？", a: "保", w: ["何", "伴", "信"] },
     { q: "禾 ＋ 火 = ？", a: "秋", w: ["愁", "秒", "炒"] },
+    { q: "竹 ＋ 毛 = ？", a: "筆", w: ["笛", "笨", "筐"] },
     { q: "口 ＋ 鳥 = ？", a: "鳴", w: ["雞", "鴨", "鵝"] },
     { q: "言 ＋ 成 = ？", a: "誠", w: ["城", "盛", "減"] },
     { q: "小 ＋ 大 = ？", a: "尖", w: ["塵", "奈", "夯"] },
@@ -978,10 +989,5 @@ function showResult() {
   }
 }
 </script>
-<div style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; pointer-events: none;">
-  <a href="https://hits.seeyoufarm.com">
-    <img src="https://hits.seeyoufarm.com/dest/user/static/badge.svg?url=https%3A%2F%2Fkarma-1827.github.io%2FChinese-RPG%2F&count_bg=%23FFD700&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=VIEWS&edge_flat=false" alt="Hits">
-  </a>
-</div>
 </body>
 </html>
