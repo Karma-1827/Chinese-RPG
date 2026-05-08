@@ -503,39 +503,43 @@
 </div>
 
 <img src="NTNU-CSL-LOGO (12).png" class="dept-logo" alt="系所Logo">
-<div id="visit-counter">
-    👾 累計瀏覽 <span id="busuanzi_value_site_pv">...</span> 次
+<div id="visit-counter" style="font-family: 'Press Start 2P', cursive; font-size: 10px; color: var(--electric-blue); opacity: 0.8;">
+    👾 累計瀏覽 <span id="display_pv_count" style="display:none;">0</span> 次
+    <span id="busuanzi_value_site_pv" style="display:none;"></span>
 </div>
-<div id="game-container">
-    <div id="start-screen" class="screen active">
-        <h1 style="font-size: 100px;">NTNU CSL</h1>
-        <h1 style="font-size: 70px;">數位華語<br>像素勇者遠征</h1>
-        <button class="btn" style="font-size: 30px; margin-top: 30px;" onclick="goToScreen('char-select')">開始冒險</button>
-    </div>
-    <script>
-        // 這段小程式碼會每 0.5 秒檢查一次，直到不蒜子把數字傳回來
-        var fixBusuanzi = setInterval(function() {
-            var originalValue = document.getElementById('busuanzi_value_site_pv').innerText;
-            if (originalValue !== "" && originalValue !== "--") {
-                // 取得原始數字
-                var count = parseInt(originalValue);
-                // 設定偏移量 (減去測試時累積的 13)
-                var offset = 13; 
-                var finalShow = count - offset;
-                
-                // 確保數字不會變成負數
-                if (finalShow < 0) finalShow = 0;
-                
-                // 把計算後的結果填入顯示區域
-                document.getElementById('display_pv_value').innerText = finalShow;
-                // 顯示整個容器
-                document.getElementById('busuanzi_container_site_pv').style.display = "inline-block";
-                
-                // 停止檢查
-                clearInterval(fixBusuanzi);
-            }
-        }, 500);
-    </script>
+
+<script>
+(function() {
+    // === 手動設定區 ===
+    // 請填入明天正式開始前，你看到的那個「目前累計數字」（例如 13）
+    var offset = 30; 
+
+    var checkBsz = setInterval(function() {
+        var bszSpan = document.getElementById('busuanzi_value_site_pv');
+        var displaySpan = document.getElementById('display_pv_count');
+        
+        // 取得不蒜子傳回來的原始字串
+        var rawVal = bszSpan.innerHTML;
+
+        // 當不蒜子成功載入數據（不是空字串或 --）
+        if (rawVal && rawVal !== "" && rawVal !== "--") {
+            var currentTotal = parseInt(rawVal);
+            var correctedVal = currentTotal - offset;
+
+            // 確保數字不會是負數
+            if (correctedVal < 0) correctedVal = 0;
+
+            // 將修正後的數字填入顯示用的 span，並取消隱藏
+            displaySpan.innerHTML = correctedVal;
+            displaySpan.style.display = "inline";
+
+            // 停止監測
+            clearInterval(checkBsz);
+        }
+    }, 100); // 每 0.1 秒偵測一次，反應速度極快
+})();
+</script>
+
 
     <div id="char-select" class="screen">
         <h3>選擇你的身份</h3>
