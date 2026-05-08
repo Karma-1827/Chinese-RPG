@@ -973,7 +973,7 @@ function showResult() {
     motherMsg.innerText = "這束花，送給最親愛的媽媽！";
     motherMsg.style.color = "white";
     motherMsg.style.textShadow = "0 0 20px var(--flower-pink)";
-    msg.innerText = "完美遠征：粉紅康乃馨解鎖";
+    msg.innerText = "完美遠征：繽紛康乃馨解鎖";
     msg.style.color = "var(--flower-pink)";
     msg.style.textShadow = "0 0 15px var(--flower-red)";
   } else {
@@ -987,6 +987,20 @@ function showResult() {
     msg.style.textShadow = isWin ? "0 0 15px #6ab04c" : "0 0 15px #ff0000";
   }
 }
+
+// 等不蒜子載入完後，把數字扣掉今天前的累計
+window.addEventListener('load', () => {
+    const offset = 15; // 改成今晚的實際數字
+    const el = document.getElementById('busuanzi_value_site_pv');
+    const observer = new MutationObserver(() => {
+        const val = parseInt(el.innerText);
+        if (!isNaN(val)) {
+            el.innerText = Math.max(0, val - offset);
+            observer.disconnect();
+        }
+    });
+    observer.observe(el, { childList: true });
+});
 </script>
 </body>
 </html>
