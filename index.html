@@ -239,9 +239,20 @@
 
         #feedback { font-size: 28px; margin-top: 15px; height: 36px; font-weight: bold; }
         .diff-desc { font-size: 16px; color: #666; margin-top: -10px; margin-bottom: 20px; }
+
+        #music-btn {
+            position: fixed; top: 15px; right: 15px; z-index: 3000;
+            background: transparent; border: 3px solid var(--c3);
+            color: var(--c3); font-size: 22px; width: 45px; height: 45px;
+            cursor: pointer; border-radius: 50%; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #music-btn:hover { background: var(--c3); color: #0d0d1a; box-shadow: 0 0 15px var(--c3); }
     </style>
 </head>
 <body>
+<audio id="bgm" loop><source src="Fairy Tail Main Theme.mp3" type="audio/mpeg"></audio>
+<button id="music-btn" onclick="toggleMusic()" title="音樂開關">🔊</button>
 <img src="NTNU-CSL-LOGO (12).png" class="dept-logo" alt="系所Logo">
 <div id="game-container">
     <div id="start-screen" class="screen active">
@@ -385,7 +396,6 @@ const QB = {
     { q: "舌 ＋ 甘 = ？", a: "甜", w: ["恬", "亂", "辭"] },
     { q: "亻 ＋ 呆 = ？", a: "保", w: ["何", "伴", "信"] },
     { q: "禾 ＋ 火 = ？", a: "秋", w: ["愁", "秒", "炒"] },
-    { q: "竹 ＋ 毛 = ？", a: "筆", w: ["笛", "笨", "筐"] },
     { q: "口 ＋ 鳥 = ？", a: "鳴", w: ["雞", "鴨", "鵝"] },
     { q: "言 ＋ 成 = ？", a: "誠", w: ["城", "盛", "減"] },
     { q: "小 ＋ 大 = ？", a: "尖", w: ["塵", "奈", "夯"] },
@@ -545,6 +555,21 @@ function setDiff(d) {
   state.difficulty = d;
   goToScreen('map-screen');
   setTimeout(initMapPositions, 150);
+  // 進入地圖畫面時開始播放音樂
+  const bgm = document.getElementById('bgm');
+  bgm.play().catch(() => {});
+}
+
+function toggleMusic() {
+  const bgm = document.getElementById('bgm');
+  const btn = document.getElementById('music-btn');
+  if (bgm.paused) {
+    bgm.play();
+    btn.textContent = '🔊';
+  } else {
+    bgm.pause();
+    btn.textContent = '🔇';
+  }
 }
 
 function initMapPositions() {
@@ -651,7 +676,7 @@ function showResult() {
     motherMsg.innerText = "這束花，送給最親愛的媽媽！";
     motherMsg.style.color = "white";
     motherMsg.style.textShadow = "0 0 20px var(--flower-pink)";
-    msg.innerText = "完美遠征：粉紅康乃馨解鎖";
+    msg.innerText = "完美遠征：繽紛康乃馨解鎖";
     msg.style.color = "var(--flower-pink)";
     msg.style.textShadow = "0 0 15px var(--flower-red)";
   } else {
