@@ -248,11 +248,97 @@
             display: flex; align-items: center; justify-content: center;
         }
         #music-btn:hover { background: var(--c3); color: #0d0d1a; box-shadow: 0 0 15px var(--c3); }
+
+        /* 說明視窗 */
+        #info-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75); z-index: 5000;
+            align-items: center; justify-content: center;
+        }
+        #info-overlay.show { display: flex; }
+        #info-box {
+            background: #13132a;
+            border: 4px solid transparent;
+            border-image: linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6)) 1;
+            padding: 40px 50px; max-width: 700px; width: 90%;
+            text-align: left; position: relative;
+            box-shadow: 0 0 40px rgba(34,166,242,0.3);
+            animation: fadeInUp 0.4s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #info-box h2 {
+            font-family: 'Press Start 2P', cursive; font-size: 18px; margin-bottom: 28px;
+            background: linear-gradient(90deg, var(--c1), var(--c3), var(--c5));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            text-align: center;
+        }
+        #info-box .info-section { margin-bottom: 20px; }
+        #info-box .info-section h4 {
+            font-size: 15px; color: var(--c3); margin-bottom: 8px;
+            font-family: 'Press Start 2P', cursive; font-size: 12px;
+        }
+        #info-box .info-section p { font-size: 15px; color: #ccc; line-height: 1.8; margin: 0; }
+        #info-box .info-section ul { margin: 0; padding-left: 20px; color: #ccc; font-size: 15px; line-height: 2; }
+        #info-close {
+            display: block; margin: 28px auto 0;
+            background: transparent; border: 3px solid var(--c5); color: var(--c5);
+            font-family: 'Press Start 2P', cursive; font-size: 14px;
+            padding: 12px 36px; cursor: pointer; transition: 0.3s;
+        }
+        #info-close:hover { background: var(--c5); color: #0d0d1a; box-shadow: 0 0 20px var(--c5); }
     </style>
 </head>
 <body>
 <audio id="bgm" loop><source src="Fairy Tail Main Theme.mp3" type="audio/mpeg"></audio>
 <button id="music-btn" onclick="toggleMusic()" title="音樂開關">🔊</button>
+
+<!-- 說明視窗 -->
+<div id="info-overlay">
+    <div id="info-box">
+        <h2>⚔️ 遊戲說明 ⚔️</h2>
+
+        <div class="info-section">
+            <h4>🎮 玩法</h4>
+            <ul>
+                <li>選擇身份與難度後開始闖關</li>
+                <li>共 <strong style="color:var(--c3)">6 關</strong>，每關限時 <strong style="color:var(--c3)">15 秒</strong> 作答</li>
+                <li>答題越快，得分越高！</li>
+                <li>最終關考驗前 5 關精華題 × 5 題</li>
+                <li>全程零錯誤且贏過 AI → 解鎖 🌸 彩色康乃馨</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h4>📚 難度說明</h4>
+            <ul>
+                <li><span style="color:var(--c4)">簡單</span>：字謎 ＋ 漢字結構</li>
+                <li><span style="color:var(--c2)">普通</span>：拼音練習 ＋ 成語</li>
+                <li><span style="color:var(--c1)">困難</span>：文化知識 ＋ 語法練習</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h4>📝 題目來源</h4>
+            <p>本遊戲題目由<strong style="color:var(--c3)">系上老師</strong>出題及網路資源整理，經審查確認正確性後收錄。</p>
+        </div>
+
+        <div class="info-section">
+            <h4>🎵 BGM 來源</h4>
+            <p>Fairy Tail Main Theme（魔導少年片頭曲）</p>
+        </div>
+
+        <div class="info-section">
+            <h4>🛠️ 技術</h4>
+            <p>遊戲由 <strong style="color:var(--c5)">Gemini</strong> ＋ <strong style="color:var(--c6)">Claude</strong> 協作開發</p>
+        </div>
+
+        <button id="info-close" onclick="closeInfo()">開始冒險！</button>
+    </div>
+</div>
+
 <img src="NTNU-CSL-LOGO (12).png" class="dept-logo" alt="系所Logo">
 <div id="game-container">
     <div id="start-screen" class="screen active">
@@ -432,6 +518,16 @@ const QB = {
     {q:"「艋舺」原意是指小船，源自哪種語系？",a:"C",opts:["(A)荷蘭語","(B)閩南語","(C)原住民語（平埔族）","(D)客家語"]},
     {q:"台灣「辦桌」負責指揮調度整場宴席的主廚是？",a:"B",opts:["(A)店小二","(B)總舖師","(C)跑堂","(D)掌櫃"]},
     {q:"金門地區隨處可見用來鎮風辟邪的石刻像是？",a:"B",opts:["(A)石敢當","(B)風獅爺","(C)劍獅","(D)麒麟"]},
+    {q:"在馬來西亞的華人社群中，「撈生」（Yee Sang）通常在什麼節日進行？",a:"C",opts:["(A)端午節","(B)中秋節","(C)農曆新年","(D)清明節"]},
+    {q:"【三合院格局】傳統三合院建築中，中間最高、用來供奉祖先和神明的大廳稱為？",a:"B",opts:["(A)廂房","(B)正身（正廳）","(C)護龍","(D)庭院"]},
+    {q:"【廟宇裝飾】走進台灣傳統廟宇，屋脊上用碎瓷片拼貼而成的裝飾工法稱為？",a:"C",opts:["(A)泥塑","(B)木雕","(C)剪黏","(D)彩繪"]},
+    {q:"【空間智慧】傳統三合院前方用來曬穀、聚會的開闊空地，台語俗稱為？",a:"A",opts:["(A)埕","(B)井","(C)巷","(D)門口"]},
+    {q:"【守護神靈】台灣城隍廟裡身材一高一矮、負責緝拿惡人的兩位將軍通常稱為？",a:"B",opts:["(A)千里眼與順風耳","(B)七爺與八爺（范、謝將軍）","(C)土地公與土地婆","(D)文判官與武判官"]},
+    {q:"【媽祖文化】媽祖兩旁護法神中，哪一位是「看得遠」的？",a:"C",opts:["(A)順風耳","(B)報馬仔","(C)千里眼","(D)虎爺"]},
+    {q:"【原住民文化】「賽夏族巴斯達隘（矮靈祭）」以哪種特殊樂器／裝飾物聞名？",a:"A",opts:["(A)臀鈴","(B)口簧琴","(C)木鼓","(D)笛子"]},
+    {q:"【古早童玩】用竹子與橡皮筋製作、能射出紙彈的玩具是？",a:"C",opts:["(A)尪仔標","(B)陀螺","(C)竹槍","(D)毽子"]},
+    {q:"【自然保育】冬天集體南下大武山腳下避冬、形成壯觀景象的蝴蝶是？",a:"B",opts:["(A)鳳蝶","(B)紫斑蝶","(C)粉蝶","(D)蛺蝶"]},
+    {q:"【廟宇文化】廟門兩旁石獅中，爪下踩著「繡球」的是公獅還是母獅？",a:"A",opts:["(A)公獅","(B)母獅","(C)都有可能","(D)石獅不分公母"]}
   ],
   idiom: [
     {q:"「胸有成竹」現用來比喻什麼？",a:"B",opts:["(A)為人正直","(B)很有把握","(C)孤芳自賞","(D)內心空虛"]},
@@ -478,7 +574,16 @@ const QB = {
     {q:"「飽經風霜」形容？",a:"B",opts:["(A)環境極優越","(B)歷經磨難","(C)心情極輕鬆","(D)衣食無虞"]},
     {q:"成語「一鳴驚人」的主人公是？",a:"A",opts:["(A)楚莊王","(B)齊威王","(C)秦始皇","(D)漢武帝"]},
     {q:"「四面楚歌」形容處境？",a:"C",opts:["(A)意外大勝","(B)力挽狂瀾","(C)四面受敵、孤立無援","(D)重振旗鼓"]},
-    {q:"「完璧歸趙」主要人物？",a:"B",opts:["(A)廉頗","(B)藺相如","(C)趙括","(D)藺相公"]}
+    {q:"「完璧歸趙」主要人物？",a:"B",opts:["(A)廉頗","(B)藺相如","(C)趙括","(D)藺相公"]},
+    {q:"哪個成語與岳飛有關？",a:"A",opts:["(A)精忠報國","(B)見風轉舵","(C)隨波逐流","(D)無所事事"]},
+    {q:"哪個成語與司馬遷有關？",a:"A",opts:["(A)忍辱負重","(B)一帆風順","(C)得過且過","(D)坐享其成"]},
+    {q:"哪個成語與勾踐有關？",a:"A",opts:["(A)臥薪嘗膽","(B)坐井觀天","(C)自相矛盾","(D)畫龍點睛"]},
+    {q:"哪個成語與文天祥有關？",a:"A",opts:["(A)正氣凜然","(B)無精打采","(C)隨遇而安","(D)見利忘義"]},
+    {q:"哪個成語與曹操有關？",a:"A",opts:["(A)望梅止渴","(B)坐享其成","(C)得過且過","(D)自相矛盾"]},
+    {q:"哪個成語與諸葛亮有關？",a:"A",opts:["(A)鞠躬盡瘁","(B)見風轉舵","(C)隨波逐流","(D)無所事事"]},
+    {q:"哪個成語與趙括有關？",a:"A",opts:["(A)紙上談兵","(B)一帆風順","(C)安居樂業","(D)水到渠成"]},
+    {q:"哪個成語與西施有關？",a:"A",opts:["(A)沉魚落雁","(B)自相矛盾","(C)一成不變","(D)無所事事"]},
+    {q:"哪個成語與貂蟬有關？",a:"A",opts:["(A)閉月羞花","(B)見風轉舵","(C)得過且過","(D)坐享其成"]}
   ],
   pinyin: [
     {q:"「南港展覽館」的拼音？",a:"Nángǎng Zhǎnlǎnguǎn",w:["Lángǎng Zhǎnlǎnguǎn","Nángǎn Zhǎnlǎnguǎn","Nángǎng Zhǎnlǎguǎn"]},
@@ -516,11 +621,28 @@ const QB = {
     {q:"「府中」的拼音？",a:"Fǔzhōng",w:["Fǔzōng","Hǔzhōng","Fúzhōng"]},
     {q:"「頂溪」的拼音？",a:"Dǐngxī",w:["Dǐnxī","Tǐngxī","Dǐngshī"]},
     {q:"「昆陽」的拼音？",a:"Kūnyáng",w:["Kūnyán","Gūnyáng","Kūnyǎng"]},
+  ],
+
+  grammar: [
+    {q:"哪一個用法是新興用法？",a:"(3)小晨被塑膠",w:["(1)小強被讚美","(2)小綺被看見","(4)小蓁被推薦"]},
+    {q:"哪一個用法不是臺灣華語的用法？",a:"(2)老闆用麥克筆簽名",w:["(1)這條魚，我想用煎的","(3)你用吵的是得不到想要的東西","(4)我們用走的去買晚餐"]},
+    {q:"哪一個句子是正確的？",a:"(4)弟弟很可能會去打排球",w:["(1)妹妹很會猜拳，每次都贏","(2)姊姊很肯幫助大家","(3)哥哥很能騎腳踏車"]},
+    {q:"哪一個用法是錯誤的？",a:"(4)我贏給他一箱餅乾",w:["(1)我還給他一件外套","(2)我送給他一組積木","(3)我借給他一本小說"]},
+    {q:"哪一個選項是正確的？",a:"(2)寫功課",w:["(1)坐椅子","(3)跑操場","(4)走馬路"]},
+    {q:"哪一個句子是錯誤的？",a:"(3)小安很能吃",w:["(1)小花很漂亮","(2)小如很有錢","(4)小華很怕狗"]},
+    {q:"哪一個選項的「就」用法跟另外三個不一樣？",a:"(3)姊姊要的餅乾不就拿來了",w:["(1)弟弟換衣服就出門打球了","(2)哥哥一出門就下雨了","(4)妹妹睡醒就想找媽媽"]},
+    {q:"哪一個選項是媽媽提醒小孩寫功課最溫和的口氣？",a:"(3)快寫功課喔！",w:["(1)快寫功課了！","(2)快寫功課啦！","(4)快寫功課啊！"]},
+    {q:"哪一個選項沒有表達「完成」的語義？",a:"(1)小如吃小華的蘋果",w:["(2)小安送小花一本小說","(3)小晨從家裡搭車到學校","(4)小蓁笑到流眼淚"]},
+    {q:"哪一個用法是新興用法？",a:"(2)中秋賞月、烤起來",w:["(1)這道菜吃起來很辣","(3)現場氣氛帶起來了","(4)這件褲子穿起來很舒服"]},
+    {q:"哪一個選項的說法表示小華無法確認書包是不是他的？",a:"(1)這個書包是我的吧！",w:["(2)這個書包是我的啊！","(3)這個書包是我的喔！","(4)這個書包是我的了！"]},
+    {q:"哪一個選項的句子用法是錯誤的？",a:"(3)小如沒有要參加比賽",w:["(1)小花不喝咖啡","(2)小安沒有買到麵包","(4)不想整理房間"]},
+    {q:"哪一個句子是表達委婉否定祈使句的用法？",a:"(1)請別開電燈",w:["(2)請不要開電燈","(3)請不必開電燈","(4)請不用開電燈"]},
+    {q:"哪一個句子不會出現在你的對話中？",a:"(4)我把功課寫得很辛苦",w:["(1)我把活動設計得很精彩","(2)我把教室整理得很整齊","(3)我把海報設計得很漂亮"]}
   ]
 };
 
-const DIFF_TYPES = { easy: ['riddle', 'kanji_structure'], normal: ['pinyin', 'idiom'], hard: ['culture'] };
-const TYPE_LABELS = { riddle: '字謎', kanji_structure: '漢字結構', pinyin: '拼音練習', idiom: '成語', culture: '文化知識' };
+const DIFF_TYPES = { easy: ['riddle', 'kanji_structure'], normal: ['pinyin', 'idiom'], hard: ['culture', 'grammar'] };
+const TYPE_LABELS = { riddle: '字謎', kanji_structure: '漢字結構', pinyin: '拼音練習', idiom: '成語', culture: '文化知識', grammar: '語法練習' };
 
 function isOptsFormat(q) { return !!q.opts; }
 
@@ -538,7 +660,7 @@ function getRandQ(typeName) {
   return normalizeQ(pool[Math.floor(Math.random() * pool.length)], typeName);
 }
 
-let state = { player: 0, ai: 0, level: 0, difficulty: '', char: '', questions: [], qIdx: 0, timer: null, time: 15, nodePositions: [], playedPool: [], wrongCount: 0 };
+let state = { player: 0, ai: 0, level: 0, difficulty: '', char: '', questions: [], qIdx: 0, timer: null, time: 15, nodePositions: [], playedPool: [], wrongCount: 0, infoShown: false };
 
 function goToScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
@@ -558,6 +680,15 @@ function setDiff(d) {
   // 進入地圖畫面時開始播放音樂
   const bgm = document.getElementById('bgm');
   bgm.play().catch(() => {});
+  // 第一次進入才顯示說明視窗
+  if (!state.infoShown) {
+    document.getElementById('info-overlay').classList.add('show');
+    state.infoShown = true;
+  }
+}
+
+function closeInfo() {
+  document.getElementById('info-overlay').classList.remove('show');
 }
 
 function toggleMusic() {
@@ -676,7 +807,7 @@ function showResult() {
     motherMsg.innerText = "這束花，送給最親愛的媽媽！";
     motherMsg.style.color = "white";
     motherMsg.style.textShadow = "0 0 20px var(--flower-pink)";
-    msg.innerText = "完美遠征：繽紛康乃馨解鎖";
+    msg.innerText = "完美遠征：粉紅康乃馨解鎖";
     msg.style.color = "var(--flower-pink)";
     msg.style.textShadow = "0 0 15px var(--flower-red)";
   } else {
